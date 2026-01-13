@@ -34,7 +34,35 @@ public class BookApiClient {
                 .body(String.class);
     }
 
-    //이번 달 구독 추천
+    //신작 도서
+    public String getNewBook(String libCode){
+        String url = UriComponentsBuilder
+                .fromHttpUrl(BASE_URL + "newArrivalBook")
+                .queryParam("authKey", authkey)
+                .queryParam("libCode", libCode)
+                .queryParam("format", "json")
+                .toUriString();
+
+        return restClient.get()
+                .uri(url)
+                .retrieve()
+                .body(String.class);
+    }
+
+    //베스트 셀러 (BestSellerBook)
+    public String getBestSeller(String searchDt){
+        String url = UriComponentsBuilder
+                .fromHttpUrl(BASE_URL + "loanItemSrch")
+                .queryParam("authKey", authkey)
+                .queryParam("searchDt", searchDt)
+                .queryParam("format", "json")
+                .toUriString();
+
+        return restClient.get()
+                .uri(url)
+                .retrieve()
+                .body(String.class);
+    }
 
     //이달의 키워드
 
