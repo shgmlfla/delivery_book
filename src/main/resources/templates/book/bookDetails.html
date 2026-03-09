@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -9,30 +9,30 @@
     <link rel="stylesheet" th:href="@{/style.css}">
 </head>
 <body>
-    <div th:replace="global/header :: mainHeader"></div>
-    <div class="container mt-5">
-        <div class="row">
-            <!-- 책 이미지 -->
-            <div class="col-md-4">
-                <img src="images/thumb-milk.png" class="img-fluid rounded shadow" alt="Book Cover">
-            </div>
+<th:block th:replace="global/header :: mainHeader"></th:block>
 
-            <!-- 책 상세 정보 -->
-            <div class="col-md-8">
-                <h2 class="mb-3">책 제목 예시</h2>
-                <p><strong>저자:</strong> 홍길동</p>
-                <p><strong>출판사:</strong> DBook 출판사</p>
-                <p><strong>출판일:</strong> 2025-09-15</p>
-                <p class="mt-4">
-                    이 책은 예시 책 설명입니다. Bootstrap을 활용해서 레이아웃을 만들었고,
-                    실제 서비스에서는 DB에서 가져온 책 정보가 들어갈 수 있습니다.
-                </p>
-                <button class="btn btn-primary mt-3">구매하기</button>
-                <button class="btn btn-outline-secondary mt-3">장바구니</button>
-            </div>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-3 text-center">
+            <img th:src="${bookDetails.bookImageURL}"
+                 class="img-fluid rounded shadow"
+                 alt="Book Cover">
+        </div>
+
+        <div class="col-md-9">
+            <h2 th:text="${bookDetails.bookname}">책 제목</h2>
+            <p th:text="'저자정보 : ' + ${bookDetails.authors}">저자 정보</p>
+            <p th:text="'출판일 : ' + ${bookDetails.publication_year}">출판일</p>
+            <p th:text="'분류 : ' + ${bookDetails.publisher}">분류</p>
+            <p th:text="'ISBN : ' + ${bookDetails.isbn13}">ISBN</p>
+
+            <button class="btn btn-primary mt-3">구매하기</button>
+            <button class="btn btn-outline-secondary mt-3">장바구니</button>
         </div>
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

@@ -64,9 +64,60 @@ public class BookApiClient {
                 .body(String.class);
     }
 
-    //이달의 키워드
+    // 도서 검색
+    public String getSearchBook(String title, String author){
+        String url = UriComponentsBuilder
+                .fromHttpUrl(BASE_URL + "srchBooks")
+                .queryParam("authKey", authkey)
+                .queryParam("title", title)
+                .queryParam("author", author)
+                .queryParam("format", "json")
+                .build(false)
+                .toUriString();
 
-    //베스트 샐로 TOP10
+        return restClient.get()
+                .uri(url)
+                .retrieve()
+                .body(String.class);
+    }
+
+    //도서 상세 페이지
+    public String getSearchByIsbn(String isbn){
+        String url = UriComponentsBuilder
+                .fromHttpUrl(BASE_URL + "srchBooks")
+                .queryParam("authKey", authkey)
+                .queryParam("isbn13", isbn)
+                .queryParam("format", "json")
+                .toUriString();
+
+        return restClient.get()
+                .uri(url)
+                .retrieve()
+                .body(String.class);
+    }
+
+    //랜덤 도서 (정개 배송 도서)
+    public String getRecommendedBook(String searchDt, int age,  String gender, int pageSize){
+
+        int maxPage = 5000 / pageSize;  //도서 최대 건 수 5000
+        int randomPage = (int) (Math.random() * maxPage) + 1;
+
+        String url = UriComponentsBuilder
+                .fromHttpUrl(BASE_URL + "loanItemSrch")
+                .queryParam("authKey", authkey)
+                .queryParam("searchDt", searchDt)
+                .queryParam("age", age)
+                .queryParam("gender", gender)
+                .queryParam("pageNo", randomPage)
+                .queryParam("pageSize", pageSize)
+                .queryParam("format", "json")
+                .toUriString();
+
+        return restClient.get()
+                .uri(url)
+                .retrieve()
+                .body(String.class);
+    }
 
     //오늘의 랜덤 픽
 

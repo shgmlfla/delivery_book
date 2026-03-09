@@ -1,8 +1,6 @@
 package com.example.dbook.book.service;
 
-import com.example.dbook.book.dto.BestSellerBookDto;
-import com.example.dbook.book.dto.HotTrendBookDto;
-import com.example.dbook.book.dto.NewBookDto;
+import com.example.dbook.book.dto.*;
 import com.example.dbook.main.service.BookApiClient;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -88,5 +86,93 @@ public class BookApiService {
         }
     }
 
+    public List<SearchBookDto> getSearchBook(String title, String author) {
+        String json = bookApiClient.getSearchBook(title, author);
+
+        try {
+            JsonNode root = objectMapper.readTree(json);
+
+            JsonNode docs = root
+                    .path("response")
+                    .path("docs");
+
+            List<SearchBookDto> list = new ArrayList<>();
+            for (JsonNode node : docs){
+                JsonNode docNode = node.path("doc");
+                list.add(objectMapper.treeToValue(docNode, SearchBookDto.class));
+            }
+            return list;
+
+        } catch (Exception e) {
+            throw new RuntimeException("BookSearch JSON 파싱 실패: " + e.getMessage());
+        }
+    }
+
+    public List<SearchBookDto> getSearchByIsbn(String isbn) {
+        String json = bookApiClient.getSearchByIsbn(isbn);
+
+        try {
+            JsonNode root = objectMapper.readTree(json);
+
+            JsonNode docs = root
+                    .path("response")
+                    .path("docs");
+
+            List<SearchBookDto> list = new ArrayList<>();
+            for (JsonNode node : docs){
+                JsonNode docNode = node.path("doc");
+                list.add(objectMapper.treeToValue(docNode, SearchBookDto.class));
+            }
+            return list;
+
+        } catch (Exception e) {
+            throw new RuntimeException("BookSearch JSON 파싱 실패: " + e.getMessage());
+        }
+    }
+
+    public List<SearchBookDto> searchByIsbn(String isbn) {
+        String json = bookApiClient.getSearchByIsbn(isbn);
+
+        try {
+            JsonNode root = objectMapper.readTree(json);
+
+            JsonNode docs = root
+                    .path("response")
+                    .path("docs");
+
+            List<SearchBookDto> list = new ArrayList<>();
+            for (JsonNode node : docs){
+                JsonNode docNode = node.path("doc");
+                list.add(objectMapper.treeToValue(docNode, SearchBookDto.class));
+            }
+            return list;
+
+        } catch (Exception e) {
+            throw new RuntimeException("BookSearch JSON 파싱 실패: " + e.getMessage());
+        }
+    }
+
+    //랜덤
+    public List<RecommendedBookDto> getRecommendedBook(String searchDt,  int age, String gender, int pageSize) {
+        String json = bookApiClient.getRecommendedBook(searchDt, age, gender, pageSize);
+
+        try {
+            JsonNode root = objectMapper.readTree(json);
+
+            JsonNode docs = root
+                    .path("response")
+                    .path("docs");
+
+            List<RecommendedBookDto> list = new ArrayList<>();
+            for (JsonNode node : docs){
+                JsonNode docNode = node.path("doc");
+                list.add(objectMapper.treeToValue(docNode, RecommendedBookDto.class));
+            }
+            return list;
+
+        } catch (Exception e) {
+            throw new RuntimeException("RecommendedBook JSON 파싱 실패: " + e.getMessage());
+        }
+    }
 }
 
