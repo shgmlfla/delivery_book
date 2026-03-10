@@ -11,19 +11,17 @@ import com.example.dbook.order.repository.OrderBookRepository;
 import com.example.dbook.order.repository.OrderRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MyPageService {
 
     private final MemberRepository memberRepository;
@@ -86,7 +84,6 @@ public class MyPageService {
 
             orderBookRepository.save(orderBook);
         }
-
         return selectedFourBooks;
     }
 }

@@ -21,15 +21,29 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private String nickname;
+
+    @Column(nullable = false)
+    private String is_subscriber;
+
+    @Column(nullable = false)
+    private String address;
+
+    @Column
+    private String gender;
+
+    @Column
+    private String age;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MemberStatus status;
 
-    // 회원 탈퇴 여부
     public enum MemberStatus {
         ACTIVE,
         WITHDRAWN   // 탈퇴
-    } // 회원 탈퇴 여부
+    }
 
     public static Member signup(String email, String password) {
         return Member.builder()
