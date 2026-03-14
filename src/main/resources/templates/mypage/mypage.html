@@ -31,8 +31,50 @@
                     <a href="/mypage/edit" class="edit-btn">회원정보 수정</a>
                 </div>
             </div>
-            <div class="col-6">
-                오른쪽 영역(구독중인 플랜)
+            <div class="col-6 px-4">
+                <div th:if="${sub != null}" class="subscription-plan-card p-4 h-100 rounded-4 position-relative border shadow-sm" style="background: linear-gradient(145deg, #f8f9fa, #ffffff);">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                <span class="badge mb-2"
+                      th:classappend="${sub.status == 'ACTIVE' ? 'bg-primary' : 'bg-secondary'}"
+                      th:text="${sub.status == 'ACTIVE' ? '이용 중' : '정지됨'}"
+                      style="font-size: 0.7rem;">이용 중</span>
+                            <h4 class="fw-bold mb-1" style="font-size: 1.25rem;" th:text="${sub.planName}">프리미엄 정기 구독</h4>
+                            <p class="text-muted small mb-0">월 2권 배송 + 무료 배송 혜택</p>
+                        </div>
+                        <a href="/subscription/manage" class="btn btn-sm btn-outline-secondary rounded-pill px-3" style="font-size: 0.75rem;">관리</a>
+                    </div>
+
+                    <div class="delivery-status-box my-4">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="small fw-semibold text-primary">이번 달 도서 배송 준비 중</span>
+                            <span class="small text-muted">25%</span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 25%"></div>
+                        </div>
+                    </div>
+
+                    <div class="row g-2 border-top pt-3 mt-2">
+                        <div class="col-6">
+                            <div class="text-muted" style="font-size: 0.75rem;">다음 결제일</div>
+                            <div class="fw-bold small" th:text="${#temporals.format(sub.nextChargeDate, 'yyyy.MM.dd')}">2026.03.25</div>
+                        </div>
+                        <div class="col-6 text-end">
+                            <div class="text-muted" style="font-size: 0.75rem;">결제 금액</div>
+                            <div class="fw-bold text-primary small" th:text="${#numbers.formatInteger(sub.price, 0, 'COMMA') + '원'}">24,900원</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:unless="${sub != null}" class="subscription-plan-card p-4 h-100 rounded-4 d-flex flex-column justify-content-center align-items-center text-center border shadow-sm" style="min-height: 200px; background: #fdfdfd;">
+                    <div class="mb-2">
+                        <span class="material-symbols-outlined text-muted" style="font-size: 2.5rem;">auto_stories</span>
+                    </div>
+                    <h5 class="fw-bold text-secondary">이용 중인 구독권이 없습니다</h5>
+                    <p class="small text-muted mb-3">나에게 딱 맞는 독서 플랜을<br>지금 바로 시작해보세요!</p>
+                    <a href="/subscription/plans" class="btn btn-primary btn-sm rounded-pill px-4">구독 플랜 보기</a>
+                </div>
             </div>
             <div class="col-3 book-status-box">
                 <div class="status-title">
@@ -78,48 +120,18 @@
     <h3 class="mb-4 fw-bold">이번 달의 정기배송 도서</h3>
 
     <div class="row g-4">
-        <!-- Book 1 -->
-        <div class="col-6 col-md-3">
+        <div class="col-6 col-md-3" th:each="subscriptionBooks : ${subscriptionBooks}">
             <div class="card border-0 shadow-sm h-100">
-                <img src="IMAGE_URL_1" class="card-img-top" alt="book1">
+                <!--<img th:src="${subscriptionBooks.imageUrl}" class="card-img-top" th:alt="${subscriptionBooks.title}">-->
                 <div class="card-body text-center">
-                    <h6 class="fw-semibold mb-1">우리가 빛의 속도로 갈 수 없다면(추천 도서)</h6>
-                    <p class="text-muted small mb-0">김초엽</p>
+                    <h6 class="fw-semibold mb-1" th:text="${subscriptionBooks.title}">도서 제목</h6>
+                    <p class="text-muted small mb-0" th:text="${subscriptionBooks.author}">저자</p>
                 </div>
             </div>
         </div>
 
-        <!-- Book 2 -->
-        <div class="col-6 col-md-3">
-            <div class="card border-0 shadow-sm h-100">
-                <img src="IMAGE_URL_2" class="card-img-top" alt="book2">
-                <div class="card-body text-center">
-                    <h6 class="fw-semibold mb-1">연간 설역(추천도서)</h6>
-                    <p class="text-muted small mb-0">다자이 오사무</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Book 3 -->
-        <div class="col-6 col-md-3">
-            <div class="card border-0 shadow-sm h-100">
-                <img src="IMAGE_URL_3" class="card-img-top" alt="book3">
-                <div class="card-body text-center">
-                    <h6 class="fw-semibold mb-1">서바용 스크롤(추천도서)</h6>
-                    <p class="text-muted small mb-0">지아툰 허블</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Book 4 -->
-        <div class="col-6 col-md-3">
-            <div class="card border-0 shadow-sm h-100">
-                <img src="IMAGE_URL_4" class="card-img-top" alt="book4">
-                <div class="card-body text-center">
-                    <h6 class="fw-semibold mb-1">모든 순간이 너였다</h6>
-                    <p class="text-muted small mb-0">하현</p>
-                </div>
-            </div>
+        <div class="col-12 text-center" th:if="${#lists.isEmpty(subscriptionBooks)}">
+            <p class="text-muted">이번 달 배송 예정인 도서가 없습니다.</p>
         </div>
     </div>
 
