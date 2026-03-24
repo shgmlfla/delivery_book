@@ -2,15 +2,15 @@ package com.example.dbook.order.entity;
 
 import com.example.dbook.member.entity.Member;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
 @Getter
+@Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Subscription {
 
@@ -38,12 +38,5 @@ public class Subscription {
         EXPIRED    // 만료됨
     }
 
-    @Builder
-    public Subscription(Member member, String planName, Integer price, LocalDate nextChargeDate, SubscriptionStatus status) {
-        this.member = member;
-        this.planName = planName;
-        this.price = price;
-        this.nextChargeDate = nextChargeDate;
-        this.status = status;
-    }
+
 }
