@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <title>결제</title>
+    <script src="https://js.tosspayments.com/v2/standard"></script>
+</head>
+<body>
+<h1>정기 결제 수단 등록</h1>
+
+<button class="button" style="margin-top: 30px" onclick="requestBillingAuth()">카드 등록하기</button>
+
+<script th:inline="javascript">
+    const clientKey = "test_ck_pP2YxJ4K87E977PGvG7vVRGZwXLO";
+    const customerKey = "customer_" + [[${member.id}]];
+    const customerEmail = [[${member.email}]];
+    const customerName = [[${member.username}]];
+
+    const tossPayments = TossPayments(clientKey);
+    const payment = tossPayments.payment({ customerKey });
+
+    async function requestBillingAuth() {
+        try {
+            await payment.requestBillingAuth({
+                method: "CARD",
+                successUrl: window.location.origin + "/payment/success",
+                failUrl: window.location.origin + "/payment/fail",
+                customerEmail: customerEmail,
+                customerName: customerName,
+            });
+        } catch(error) {
+            console.error("결제창 오류", error);
+            alert("결제창 오류");
+        }
+    }
+</script>
+</body>
+</html>

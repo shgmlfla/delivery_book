@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <title>dbook - 카드 등록 성공</title>
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+</head>
+<body>
+<div class="box_section" style="width: 600px">
+    <img width="100px" src="https://static.toss.im/illusts/check-blue-spot-ending-frame.png" />
+    <h2>카드 등록을 완료했어요</h2>
+
+    <div class="p-grid typography--p" style="margin-top: 50px">
+        <div class="p-grid-col text--left"><b>고객 번호</b></div>
+        <div class="p-grid-col text--right" id="customerKey"></div>
+    </div>
+
+    <div class="p-grid" style="margin-top: 30px">
+        <button class="button p-grid-col5" onclick="location.href='/mypage';">마이페이지로 이동</button>
+    </div>
+</div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+
+    async function issueBillingKey() {
+      const requestData = {
+        authKey: urlParams.get("authKey"),
+        customerKey: urlParams.get("customerKey"),
+      };
+
+      // 서버의 빌링키 발급 API 호출
+      const response = await fetch("/payment/issue-billing-key", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestData),
+      });
+
+      const json = await response.json();
+
+      if (!response.ok) {
+        throw { message: json.message, code: json.code };
+      }
+
+      return json;
+    }
+
+    issueBillingKey()
+      .then(function (data) {
+        // 성공 시 UI 처리
+        document.getElementById("customerKey").textContent = urlParams.get("customerKey");
+        alert("빌링키 발급 및 저장이 완료되었습니다!");
+      })
+      .catch((err) => {
+        // 실패 시 에러 페이지로 이동
+        window.location.href = `/payment/fail?message=${err.message}&code=${err.code}`;
+      });
+</script>
+</body>
+</html>
