@@ -20,4 +20,6 @@ public interface OrderRepository extends JpaRepository<Orders, Long> {
                                             @Param("status") String status,
                                             @Param("orderType") Orders.OrderType orderType);
 
+
+   Optional<Orders> findByTossOrderId(String tossOrderId);
 }
