@@ -15,6 +15,9 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    private String username;
+
     @Column(unique = true)
     private String email;
 
@@ -36,6 +39,14 @@ public class Member {
     @Column
     private String age;
 
+    @Column
+    private String billingKey;
+
+    public void updateBillingKey(String billingKey){
+        this.billingKey = billingKey;
+        this.is_subscriber = "Y";
+    }
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MemberStatus status;
@@ -45,10 +56,14 @@ public class Member {
         WITHDRAWN   // 탈퇴
     }
 
-    public static Member signup(String email, String password) {
+    public static Member createMember(String email, String password, String username, String nickname, String address) {
         return Member.builder()
                 .email(email)
                 .password(password)
+                .username(username)
+                .nickname(nickname)
+                .address(address)
+                .is_subscriber("N")
                 .status(MemberStatus.ACTIVE)
                 .build();
     }

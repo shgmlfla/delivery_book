@@ -5,7 +5,6 @@ import com.example.dbook.config.security.CustomUserDetails;
 import com.example.dbook.member.dto.MyPageResponseDto;
 import com.example.dbook.member.service.MyPageService;
 import com.example.dbook.order.dto.SubscriptionDto;
-import com.example.dbook.order.repository.SubscriptionRepository;
 import com.example.dbook.order.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -42,7 +41,7 @@ public class MyPageController {
         SubscriptionDto sub = subscriptionService.getMySubscription(memberId);
         model.addAttribute("sub", sub);
 
-        return "mypage/mypage";
+        return "member/mypage";
     }
 
 }

@@ -22,11 +22,17 @@ public class MemberService {
             throw new RuntimeException("이미 가입된 이메일입니다.");
         }
 
-        //비밀번호 암호화
-        Member member = Member.signup(
-                request.getEmail(),
-                passwordEncoder.encode(request.getPassword())
-        );
+        Member member = Member.builder()
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .username(request.getUsername())
+                .nickname(request.getNickname())
+                .address(request.getAddress())
+                .gender(request.getGender())
+                .age(request.getAge())
+                .is_subscriber("N")
+                .status(Member.MemberStatus.ACTIVE)
+                .build();
 
         memberRepository.save(member);
 
