@@ -492,6 +492,7 @@ h1,h2,h3,h4,h5,h6 {
   transform: translate3d(0,-10px,0);
   box-shadow: 0px 21px 44px rgba(0, 0, 0, 0.08);
 }
+
 .category-carousel .category-item .category-title {
   font-weight: 600;
   font-size: 20px;
@@ -501,6 +502,7 @@ h1,h2,h3,h4,h5,h6 {
   color: #222222;
   margin-top: 20px;
 }
+
 
 /* brand carousel */
 .brand-carousel .brand-item {

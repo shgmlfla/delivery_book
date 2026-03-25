@@ -1,0 +1,35 @@
+body {
+    background-color: #f8f9fa;
+}
+.login-container {
+    max-width: 400px;
+    margin-top: 100px;
+}
+.social-btn {
+    width: 100%;
+    margin-bottom: 10px;
+}
+.kakao {
+    background-color: #FEE500;
+    color: #000;
+}
+.btn.kakao:hover{
+    background-color: #FEE500;
+    filter: brightness(0.95);
+}
+.naver {
+    background-color: #03C75A;
+    color: #fff;
+}
+.btn.naver:hover {
+    background-color: #03C75A;
+    filter: brightness(0.95);
+}
+.google {
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+.btn.google:hover {
+    background-color: #fff;
+    filter: brightness(0.97);
+}

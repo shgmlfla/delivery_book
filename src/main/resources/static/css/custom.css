@@ -1,0 +1,19 @@
+.category-carousel .category-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.category-carousel .category-title {
+  font-size: 15px;
+  line-height: 1.4;
+  margin-top: 8px;
+
+  white-space: normal !important;
+  word-break: break-word;
+  text-align: center;
+
+  display: block !important;
+  width: 100%;
+}
+
