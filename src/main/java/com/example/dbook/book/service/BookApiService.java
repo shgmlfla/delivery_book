@@ -5,10 +5,18 @@ import com.example.dbook.main.service.BookApiClient;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,33 +25,49 @@ public class BookApiService {
     private final BookApiClient bookApiClient;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    @Value("${library.default-code}")
+    private String defaultLibCode;
+
     public List<HotTrendBookDto> getHotTrendBooks(String searchDt) {
         String json = bookApiClient.getHotTrend(searchDt);
 
         try {
             JsonNode root = objectMapper.readTree(json);
 
-            JsonNode docs = root
+            JsonNode resultsNode = root
                     .path("response")
-                    .path("results")
-                    .get(0)
-                    .path("result")
-                    .path("docs");
+                    .path("results");
 
             List<HotTrendBookDto> list = new ArrayList<>();
-            for (JsonNode node : docs){
-                JsonNode docNode = node.path("doc");
-                list.add(objectMapper.treeToValue(docNode, HotTrendBookDto.class));
+            for (JsonNode results : resultsNode) {
+                JsonNode docs = results.path("result").path("docs");
+
+                for (JsonNode node : docs) {
+                    JsonNode docNode = node.path("doc");
+                    list.add(objectMapper.treeToValue(docNode, HotTrendBookDto.class));
+                }
             }
-            return list;
+
+            List<HotTrendBookDto> distinctList = list.stream()
+                    .filter(distinctByKey(HotTrendBookDto::getIsbn13))
+                    .collect(Collectors.toList());
+
+            return distinctList;
 
         } catch (Exception e) {
             throw new RuntimeException("HotTrend JSON 파싱 실패: " + e.getMessage());
         }
     }
 
-    public List<NewBookDto> getNewBook(String libCode) {
-        String json = bookApiClient.getNewBook(libCode);
+    public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        return t -> seen.add(keyExtractor.apply(t));
+    }
+
+
+    public List<NewBookDto> getNewBook() {
+
+        String json = bookApiClient.getNewBook(defaultLibCode);
 
         try {
             JsonNode root = objectMapper.readTree(json);

@@ -5,6 +5,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Component
 public class BookApiClient {
 
@@ -35,11 +38,11 @@ public class BookApiClient {
     }
 
     //신작 도서
-    public String getNewBook(String libCode){
+    public String getNewBook(String defaultLibCode){
         String url = UriComponentsBuilder
                 .fromHttpUrl(BASE_URL + "newArrivalBook")
                 .queryParam("authKey", authkey)
-                .queryParam("libCode", libCode)
+                .queryParam("libCode", defaultLibCode)
                 .queryParam("format", "json")
                 .toUriString();
 
