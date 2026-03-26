@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Controller
@@ -22,34 +25,20 @@ public class MainController {
 
     @GetMapping("/")
     public String main(Model model) {
-        String searchDt = "2025-12-05";
-        String libCode = "141553";
+        String hotTrendsSearchDt = LocalDateTime.now().minusDays(3).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String startDt = LocalDate.now().minusMonths(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-        List<HotTrendBookDto> hotTrendBookList = bookApiService.getHotTrendBooks(searchDt);
-        List<NewBookDto> newBookList = bookApiService.getNewBook(libCode);
-        List<BestSellerBookDto> bestSellerBookList = bookApiService.getBestSeller(searchDt);
+        System.out.println("hotTrendsSearchDt@@="+hotTrendsSearchDt);
+
+        List<HotTrendBookDto> hotTrendBookList = bookApiService.getHotTrendBooks(hotTrendsSearchDt);
+        List<NewBookDto> newBookList = bookApiService.getNewBook();
+        List<BestSellerBookDto> bestSellerBookList = bookApiService.getBestSeller(startDt);
 
         model.addAttribute("hotTrendBooks", hotTrendBookList);
         model.addAttribute("newBooks", newBookList);
         model.addAttribute("bestSellerBooks", bestSellerBookList);
 
         return "main/mainPage";
-    }
-
-    @GetMapping("/test")
-    public String mainTest(Model model) {
-        String searchDt = "2025-12-05";
-        String libCode = "141553";
-
-        List<HotTrendBookDto> hotTrendBookList = bookApiService.getHotTrendBooks(searchDt);
-        List<NewBookDto> newBookList = bookApiService.getNewBook(libCode);
-        List<BestSellerBookDto> bestSellerBookList = bookApiService.getBestSeller(searchDt);
-
-        model.addAttribute("hotTrendBooks", hotTrendBookList);
-        model.addAttribute("newBooks", newBookList);
-        model.addAttribute("bestSellerBooks", bestSellerBookList);
-
-        return "main/mainPageTest";
     }
 
     @GetMapping("/searchResults")
