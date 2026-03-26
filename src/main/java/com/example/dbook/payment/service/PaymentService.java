@@ -31,7 +31,7 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final MemberRepository memberRepository;
 
-    @Value("${payment.toss.secret-key}")
+    @Value("${payment.secret.key}")
     private String secretKey;
 
 

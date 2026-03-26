@@ -26,7 +26,7 @@ public class Orders {
     private Member member;
 
     //토스페이먼츠 고유 orderId
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String tossOrderId;
 
     @Column

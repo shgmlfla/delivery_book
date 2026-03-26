@@ -44,7 +44,7 @@ public class MyPageService {
     @Transactional
     public List<Book> getMySubscriptionBooks(Long memberId){
         //최신 구독권을 가진 고객
-        Optional<Orders> currentSubscription = orderRepository.findLatestSubscription(memberId, "PAYMENT_COMPLETED", Orders.OrderType.SUBSCRIPTION);
+        Optional<Orders> currentSubscription = orderRepository.findLatestSubscription(memberId, Orders.OrderStatus.PAYMENT_COMPLETED, Orders.OrderType.SUBSCRIPTION);
 
         if (currentSubscription.isEmpty()){
             return Collections.emptyList();
