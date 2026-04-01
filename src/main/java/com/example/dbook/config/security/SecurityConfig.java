@@ -40,12 +40,12 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**", "/auth/**", "/").permitAll()
-
+                        .requestMatchers("/subscription/**").authenticated()
                         .requestMatchers("/book/**", "/api/books/**").permitAll()
                         .requestMatchers("/api/mypage/**", "/mypage/**").permitAll()
                         .requestMatchers("/payment/**", "/success.html", "/fail.html", "/css/custom.css", "/css/**","/style.css", "/js/**", "/images/**", "/favicon.ico").permitAll()
                         .requestMatchers("/error").permitAll()
-
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**","/swagger-ui.html").permitAll()
                         // 4. 나머지만 인증 필요
                         .anyRequest().authenticated()
                 )
