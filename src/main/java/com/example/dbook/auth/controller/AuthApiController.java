@@ -26,7 +26,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 
+@Tag(name = "Auth", description = "인증 및 인가 관리(로그인/회원가입)")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
@@ -37,6 +40,7 @@ public class AuthApiController {
     private final MemberService memberService;
     private final AuthService authService;
 
+    @Operation(summary = "로그인", description = "JWT 적용한 로그인")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid LoginRequestDto request, HttpServletResponse response) {
         try {
@@ -67,9 +71,8 @@ public class AuthApiController {
         }
     }
 
-
-
-    @PostMapping
+    @Operation(summary = "회원가입", description = "회원가입 진행")
+    @PostMapping("/signup")
     public ResponseEntity<ApiResponse<?>> signup(@RequestBody @Valid SignupRequestDto dto){
         authService.signup(dto);
         return ResponseEntity.ok(ApiResponse.ok("회원가입 성공", null));
