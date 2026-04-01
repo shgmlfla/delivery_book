@@ -38,11 +38,12 @@ public class BookApiClient {
     }
 
     //신작 도서
-    public String getNewBook(String defaultLibCode){
+    public String getNewBook(String defaultLibCode, String searchDt){
         String url = UriComponentsBuilder
                 .fromHttpUrl(BASE_URL + "newArrivalBook")
                 .queryParam("authKey", authkey)
                 .queryParam("libCode", defaultLibCode)
+                .queryParam("searchDt", searchDt)
                 .queryParam("format", "json")
                 .toUriString();
 

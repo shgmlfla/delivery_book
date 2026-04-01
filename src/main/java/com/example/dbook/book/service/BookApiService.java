@@ -65,9 +65,9 @@ public class BookApiService {
     }
 
 
-    public List<NewBookDto> getNewBook() {
+    public List<NewBookDto> getNewBook(String newBookSearchDt) {
 
-        String json = bookApiClient.getNewBook(defaultLibCode);
+        String json = bookApiClient.getNewBook(defaultLibCode, newBookSearchDt);
 
         try {
             JsonNode root = objectMapper.readTree(json);

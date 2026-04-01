@@ -5,6 +5,7 @@ import com.example.dbook.common.exception.DuplicateEmailException;
 import com.example.dbook.member.entity.Member;
 import com.example.dbook.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,9 @@ public class AuthService {
                 encodedPassword,
                 dto.getUsername(),
                 dto.getNickname(),
-                dto.getAddress()
+                dto.getAddress(),
+                dto.getGender(),
+                dto.getAge()
         );
 
         memberRepository.save(member);

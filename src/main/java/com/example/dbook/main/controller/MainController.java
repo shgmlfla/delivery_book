@@ -27,11 +27,10 @@ public class MainController {
     public String main(Model model) {
         String hotTrendsSearchDt = LocalDateTime.now().minusDays(3).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String startDt = LocalDate.now().minusMonths(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
-        System.out.println("hotTrendsSearchDt@@="+hotTrendsSearchDt);
+        String newBookSearchDt = LocalDate.now().minusMonths(1).format(DateTimeFormatter.ofPattern("yyyy-MM"));
 
         List<HotTrendBookDto> hotTrendBookList = bookApiService.getHotTrendBooks(hotTrendsSearchDt);
-        List<NewBookDto> newBookList = bookApiService.getNewBook();
+        List<NewBookDto> newBookList = bookApiService.getNewBook(newBookSearchDt);
         List<BestSellerBookDto> bestSellerBookList = bookApiService.getBestSeller(startDt);
 
         model.addAttribute("hotTrendBooks", hotTrendBookList);
