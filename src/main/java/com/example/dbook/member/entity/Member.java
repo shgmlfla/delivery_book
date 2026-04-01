@@ -30,14 +30,13 @@ public class Member {
     @Column(nullable = false)
     private String is_subscriber;
 
-    @Column(nullable = false)
     private String address;
 
     @Column
     private String gender;
 
     @Column
-    private String age;
+    private Integer age;
 
     @Column
     private String billingKey;
@@ -56,7 +55,7 @@ public class Member {
         WITHDRAWN   // 탈퇴
     }
 
-    public static Member createMember(String email, String password, String username, String nickname, String address) {
+    public static Member createMember(String email, String password, String username, String nickname, String address, String gender, Integer age) {
         return Member.builder()
                 .email(email)
                 .password(password)
@@ -64,6 +63,9 @@ public class Member {
                 .nickname(nickname)
                 .address(address)
                 .is_subscriber("N")
+                .address(address)
+                .gender(gender)
+                .age(age)
                 .status(MemberStatus.ACTIVE)
                 .build();
     }

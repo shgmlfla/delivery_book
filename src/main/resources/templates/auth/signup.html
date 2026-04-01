@@ -43,13 +43,22 @@
                     <input type="text" name="nickname" class="form-control" required>
                 </div>
 
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-primary">도서 배송지 주소</label>
+                    <div class="input-group mb-2">
+                        <input type="text" id="address" name="address" class="form-control" placeholder="주소를 검색하세요" readonly required>
+                        <button class="btn btn-outline-primary" type="button" onclick="findAddress()">주소 찾기</button>
+                    </div>
+                </div>
+
                 <div class="row mb-4">
                     <div class="col">
                         <label class="form-label fw-semibold">성별</label>
                         <select name="gender" class="form-select">
                             <option value="">선택</option>
-                            <option value="MALE">남성</option>
-                            <option value="FEMALE">여성</option>
+                            <option value="0">남성</option>
+                            <option value="1">여성</option>
+                            <option value="2">전체</option>
                         </select>
                     </div>
 
@@ -80,5 +89,16 @@
     </div>
 </div>
 
+<script src="//t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+<script>
+    function findAddress() {
+        new kakao.Postcode({
+            oncomplete: function(data) {
+                document.getElementById('address').value = data.address;
+            }
+        }).open();
+    }
+</script>
 </body>
 </html>
