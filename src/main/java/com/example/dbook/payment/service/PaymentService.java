@@ -3,7 +3,9 @@ package com.example.dbook.payment.service;
 import com.example.dbook.member.entity.Member;
 import com.example.dbook.member.repository.MemberRepository;
 import com.example.dbook.order.entity.Orders;
+import com.example.dbook.order.entity.Subscription;
 import com.example.dbook.order.repository.OrderRepository;
+import com.example.dbook.order.service.SubscriptionService;
 import com.example.dbook.payment.entity.Payment;
 import com.example.dbook.payment.repository.PaymentRepository;
 import jakarta.transaction.Transactional;
@@ -29,7 +31,7 @@ public class PaymentService {
 
     private final OrderRepository orderRepository;
     private final PaymentRepository paymentRepository;
-    private final MemberRepository memberRepository;
+    private final SubscriptionService subscriptionService;
 
     @Value("${payment.secret.key}")
     private String secretKey;
@@ -84,6 +86,8 @@ public class PaymentService {
         paymentRepository.save(payment);
 
         order.setOrderStatus(Orders.OrderStatus.PAYMENT_COMPLETED);
+
+        subscriptionService.createOrUpadateSubscription(member, order.getPlanType());
 
         log.info("결제 성공");
     }

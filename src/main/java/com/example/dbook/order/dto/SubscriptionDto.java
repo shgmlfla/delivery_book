@@ -16,7 +16,7 @@ public class SubscriptionDto {
 
     public static SubscriptionDto from(Subscription entity){
         return SubscriptionDto.builder()
-                .planName(entity.getPlanName())
+                .planName(entity.getPlanName().getDescription())
                 .price(entity.getPrice())
                 .nextChargeDate(entity.getNextChargeDate())
                 .status(entity.getStatus().name())
