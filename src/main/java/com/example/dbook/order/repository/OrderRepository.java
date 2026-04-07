@@ -15,7 +15,8 @@ public interface OrderRepository extends JpaRepository<Orders, Long> {
             "WHERE o.member.id = :memberId " +
             "AND o.orderStatus = :status " +
             "AND o.orderType = :orderType " +
-            "ORDER BY o.orderDate DESC ")
+            "ORDER BY o.orderDate DESC " +
+            "LIMIT 1 ")
     Optional<Orders> findLatestSubscription(@Param("memberId") Long memberId,
                                             @Param("status") Orders.OrderStatus status,
                                             @Param("orderType") Orders.OrderType orderType);
