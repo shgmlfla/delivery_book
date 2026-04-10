@@ -8,6 +8,8 @@
 <body>
 <h1>정기 결제 수단 등록</h1>
 
+<div id="payment-method"></div>
+
 <button class="button" style="margin-top: 30px" onclick="requestBillingAuth()">카드 등록하기</button>
 
 <script th:inline="javascript">
@@ -16,14 +18,21 @@
     const customerEmail = [[${member.email}]];
     const customerName = [[${member.username}]];
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedPlan = urlParams.get('plan') || 'MONTHLY';
+    const selectedPrice = (selectedPlan === 'MONTHLY') ? 10800 : 108100;
+
     const tossPayments = TossPayments(clientKey);
     const payment = tossPayments.payment({ customerKey });
 
     async function requestBillingAuth() {
         try {
+            const successUrl = window.location.origin + "/payment/success"
+                             + "?planName=" + selectedPlan;
+
             await payment.requestBillingAuth({
                 method: "CARD",
-                successUrl: window.location.origin + "/payment/success",
+                successUrl: successUrl,
                 failUrl: window.location.origin + "/payment/fail",
                 customerEmail: customerEmail,
                 customerName: customerName,

@@ -3,6 +3,7 @@ package com.example.dbook.payment.service;
 import com.example.dbook.member.entity.Member;
 import com.example.dbook.member.repository.MemberRepository;
 import com.example.dbook.order.entity.Orders;
+import com.example.dbook.order.entity.PlanType;
 import com.example.dbook.order.entity.Subscription;
 import com.example.dbook.order.repository.OrderRepository;
 import com.example.dbook.order.service.SubscriptionService;
@@ -38,7 +39,7 @@ public class PaymentService {
 
 
     @Transactional
-    public void processSubscriptionPayment(Member member, String planName, Integer price) throws Exception{
+    public void processSubscriptionPayment(Member member, String planName, Integer price, PlanType planType) throws Exception{
 
         String tossOrderId = "ORD_" + member.getId() + "_" + System.currentTimeMillis();
 
@@ -63,13 +64,13 @@ public class PaymentService {
         JSONObject response = sendRequest(requestData, secretKey, url);
 
         if (response.containsKey("paymentKey") && "DONE".equals(response.get("status"))) {
-            completePayment(order, member, response);
+            completePayment(order, member, response, planType);
         } else {
             failPayment(order, response);
         }
     }
 
-    private void completePayment(Orders order, Member member, JSONObject response){
+    private void completePayment(Orders order, Member member, JSONObject response, PlanType planType){
         String approvedAtStr = (String) response.get("approvedAt");
         LocalDateTime approvedAt = OffsetDateTime.parse(approvedAtStr).toLocalDateTime();
 
@@ -87,7 +88,7 @@ public class PaymentService {
 
         order.setOrderStatus(Orders.OrderStatus.PAYMENT_COMPLETED);
 
-        subscriptionService.createOrUpadateSubscription(member, order.getPlanType());
+        subscriptionService.createOrUpadateSubscription(member, planType);
 
         log.info("결제 성공");
     }

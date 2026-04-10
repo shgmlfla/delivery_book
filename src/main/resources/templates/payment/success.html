@@ -22,11 +22,17 @@
 
 <script>
     const urlParams = new URLSearchParams(window.location.search);
+    const authKey = urlParams.get("authKey");
+    const customerKey = urlParams.get("customerKey");
+    const planName = urlParams.get("planName");
+    const price = urlParams.get("price");
 
     async function issueBillingKey() {
       const requestData = {
-        authKey: urlParams.get("authKey"),
-        customerKey: urlParams.get("customerKey"),
+        authKey: authKey,
+        customerKey: customerKey,
+        planName: planName,
+        price: price
       };
 
       // 서버의 빌링키 발급 API 호출
@@ -48,8 +54,26 @@
     issueBillingKey()
       .then(function (data) {
         // 성공 시 UI 처리
-        document.getElementById("customerKey").textContent = urlParams.get("customerKey");
-        alert("빌링키 발급 및 저장이 완료되었습니다!");
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/payment/subscribe'; // Controller 매핑 주소
+
+        const planInput = document.createElement('input');
+        planInput.type = 'hidden';
+        planInput.name = 'planName';
+        planInput.value = planName;
+        form.appendChild(planInput);
+
+        const priceInput = document.createElement('input');
+        priceInput.type = 'hidden';
+        priceInput.name = 'price';
+        priceInput.value = price;
+        form.appendChild(priceInput);
+
+        document.body.appendChild(form);
+
+        alert(`${planName} 구독 결제를 진행합니다!`);
+        location.href = '/mypage/mypage';
       })
       .catch((err) => {
         // 실패 시 에러 페이지로 이동

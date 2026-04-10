@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8" />
     <title>dbook - 등록 실패</title>
@@ -23,7 +23,11 @@
 
     <div class="p-grid" style="margin-top: 30px; display: flex; gap: 10px; justify-content: center;">
         <button class="button p-grid-col5" onclick="location.href='/payment/billing';">다시 시도하기</button>
-        <button class="button p-grid-col5" onclick="location.href='/';' style="background-color: #e8f3ff; color: #1b64da">홈으로 가기</button>
+        <button class="button p-grid-col5"
+                th:onclick="|location.href='@{/}'|"
+                style="background-color: #e8f3ff; color: #1b64da">
+            홈으로 가기
+        </button>
     </div>
 </div>
 
