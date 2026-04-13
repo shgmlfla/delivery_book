@@ -8,5 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface SubscriptionRepository extends JpaRepository<Subscription, Long> {
-    Optional<Subscription> findByMemberId(Long memberId);
+
+    //최신 구독권 해제(ACTIVE 상태)
+    Optional<Subscription> findFirstByMemberIdOrderByStartDateDesc(Long memberId);
 }

@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "subscription")
 public class Subscription {
 
     @Id
@@ -30,6 +31,9 @@ public class Subscription {
 
     private LocalDate nextChargeDate;
 
+    private LocalDate startDate;
+    private LocalDate endDate;
+
     @Enumerated(EnumType.STRING)
     private SubscriptionStatus status;
 
@@ -41,13 +45,21 @@ public class Subscription {
     }
 
     public static Subscription createSubscription(Member member, PlanType planType) {
+        LocalDate now = LocalDate.now();
         return Subscription.builder()
                 .member(member)
                 .planName(planType)
                 .price(planType.getPrice())
                 .status(SubscriptionStatus.ACTIVE)
+                .startDate(now)
                 .nextChargeDate(LocalDate.now().plusMonths(1))
                 .build();
+    }
+
+    public void cancel(){
+        this.status = SubscriptionStatus.CANCELLED;
+        this.endDate = this.nextChargeDate;
+        this.nextChargeDate = null;
     }
 
 }

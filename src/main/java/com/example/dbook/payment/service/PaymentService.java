@@ -88,7 +88,7 @@ public class PaymentService {
 
         order.setOrderStatus(Orders.OrderStatus.PAYMENT_COMPLETED);
 
-        subscriptionService.createOrUpadateSubscription(member, planType);
+        subscriptionService.createOrUpadateSubscription(member.getId(), planType);
 
         log.info("결제 성공");
     }
