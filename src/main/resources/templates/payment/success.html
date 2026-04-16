@@ -26,13 +26,15 @@
     const customerKey = urlParams.get("customerKey");
     const planName = urlParams.get("planName");
     const price = urlParams.get("price");
+    const planType = urlParams.get("planType");
 
     async function issueBillingKey() {
       const requestData = {
         authKey: authKey,
         customerKey: customerKey,
         planName: planName,
-        price: price
+        price: price,
+        planType: planType
       };
 
       // 서버의 빌링키 발급 API 호출

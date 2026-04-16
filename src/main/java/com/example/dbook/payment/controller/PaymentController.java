@@ -2,6 +2,8 @@ package com.example.dbook.payment.controller;
 
 import com.example.dbook.member.entity.Member;
 import com.example.dbook.member.repository.MemberRepository;
+import com.example.dbook.order.entity.PlanType;
+import com.example.dbook.payment.service.PaymentService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
@@ -30,6 +32,7 @@ public class PaymentController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final MemberRepository memberRepository;
+    private final PaymentService paymentService;
 
     @Value("${payment.client.key}")
     private String CLIENT_KEY;
@@ -58,6 +61,15 @@ public class PaymentController {
 
         JSONObject response = sendRequest(requestData, API_SECRET_KEY, "https://api.tosspayments.com/v1/billing/authorizations/issue");
 
+        String planName = (String) requestData.get("planName");
+        Object priceObj = requestData.get("price");
+        Integer price = 0;
+
+        if (priceObj != null) {
+            price = Integer.parseInt(String.valueOf(priceObj));
+        }
+        PlanType planType = PlanType.valueOf((String) requestData.get("planType"));
+
         if (!response.containsKey("error")) {
             String billingKey = (String) response.get("billingKey");
             String customerKey = (String) requestData.get("customerKey");
@@ -67,6 +79,13 @@ public class PaymentController {
 
             member.updateBillingKey(billingKey);
             memberRepository.save(member);
+
+            try{
+                paymentService.processSubscriptionPayment(member, planName, price, planType);
+            }
+            catch (Exception e){
+                logger.error("빌링 키 발급 완료 / 결제 승인 시 오류 발생: ", e);
+            }
 
             logger.info("성공! customerKey: {}, 발급된 billingKey: {}", customerKey, billingKey);
         }

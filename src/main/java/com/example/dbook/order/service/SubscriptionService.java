@@ -43,7 +43,11 @@ public class SubscriptionService {
                 .map(existing -> {
                     existing.setPlanName(planType);
                     existing.setPrice(planType.getPrice());
-                    existing.setNextChargeDate(LocalDate.now().plusMonths(1));
+                    if (planType == PlanType.YEARLY) {
+                        existing.setNextChargeDate(LocalDate.now().plusYears(1));
+                    } else {
+                        existing.setNextChargeDate(LocalDate.now().plusMonths(1));
+                    }
                     existing.setStatus(Subscription.SubscriptionStatus.ACTIVE);
                     return existing;
                 })

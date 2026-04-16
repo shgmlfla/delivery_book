@@ -19,7 +19,7 @@
     const customerName = [[${member.username}]];
 
     const urlParams = new URLSearchParams(window.location.search);
-    const selectedPlan = urlParams.get('plan') || 'MONTHLY';
+    const selectedPlan = urlParams.get('planType') || 'MONTHLY';
     const selectedPrice = (selectedPlan === 'MONTHLY') ? 10800 : 108100;
 
     const tossPayments = TossPayments(clientKey);
@@ -28,7 +28,9 @@
     async function requestBillingAuth() {
         try {
             const successUrl = window.location.origin + "/payment/success"
-                             + "?planName=" + selectedPlan;
+                             + "?planName=" + encodeURIComponent(selectedPlan)
+                             + "&price=" + selectedPrice
+                             + "&planType=" + selectedPlan;
 
             await payment.requestBillingAuth({
                 method: "CARD",

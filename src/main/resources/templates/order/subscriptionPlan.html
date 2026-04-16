@@ -16,7 +16,7 @@
                 <p class="display-6 my-3">
                     <span th:text="${#numbers.formatInteger(T(com.example.dbook.order.entity.PlanType).MONTHLY.price, 0, 'COMMA')}">10,800</span>원
                 </p>
-                <a th:href="@{/payment/billing(plan='MONTHLY')}" class="btn btn-primary w-100 rounded-pill">구독 시작하기</a>
+                <a th:href="@{/payment/billing(planType='MONTHLY',planName='프리미엄 정기구독')}" class="btn btn-primary w-100 rounded-pill">구독 시작하기</a>
             </div>
         </div>
     </div>
@@ -28,7 +28,7 @@
                 <p class="display-6 my-3">
                     <span th:text="${#numbers.formatInteger(T(com.example.dbook.order.entity.PlanType).YEARLY.price, 0, 'COMMA')}">108,100</span>원
                 </p>
-                <a th:href="@{/payment/billing(plan='YEARLY')}" class="btn btn-success w-100 rounded-pill">구독 시작하기</a>
+                <a th:href="@{/payment/billing(planType='YEARLY',planName='프리미엄 정기구독')}" class="btn btn-success w-100 rounded-pill">구독 시작하기</a>
             </div>
         </div>
     </div>
