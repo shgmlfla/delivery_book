@@ -34,7 +34,7 @@ public class SubscriptionController {
         try{
             subscriptionService.cancelSubscription(subscriptionId, userDetails.getId());
             rttr.addFlashAttribute("message", "구독이 정상적으로 해지되었습니다.");
-            return "redirect:/member/mypage";
+            return "redirect:/mypage/mypage";
         } catch (Exception e) {
             log.error("구독 해지 실패 에러: ", e);
             rttr.addFlashAttribute("message", "시스템 오류로 해지에 실패했습니다.");
