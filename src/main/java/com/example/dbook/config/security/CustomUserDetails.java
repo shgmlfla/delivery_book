@@ -21,6 +21,10 @@ public class CustomUserDetails implements UserDetails {
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
+    public Member getUser() {
+        return member;
+    }
+
     public Long getId(){
         return member.getId();
     }

@@ -69,4 +69,20 @@ public class Member {
                 .status(MemberStatus.ACTIVE)
                 .build();
     }
+
+    public void updatePassword(String encodedPassword) {
+        if (encodedPassword != null && !encodedPassword.isBlank()) {
+            this.password = encodedPassword;
+        }
+    }
+
+    public void updateNickName(String nickname){
+        if (nickname != null && !nickname.isBlank()){
+            this.nickname = nickname;
+        }
+    }
+
+    public void updateAddress(String address) {
+        this.address = address;
+    }
 }

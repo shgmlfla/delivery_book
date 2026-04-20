@@ -19,7 +19,7 @@
         <div class="card-body p-4">
             <h3 class="text-center mb-4 fw-bold">회원정보 수정</h3>
 
-            <form th:action="@{/member/edit}" th:object="${memberUpdateDto}" method="post">
+            <form th:action="@{/api/member/update}" th:object="${memberUpdateDto}" method="post">
 
                 <div class="mb-3">
                     <label class="form-label fw-semibold">이메일</label>
@@ -31,18 +31,16 @@
                 <div class="mb-3">
                     <label class="form-label fw-semibold text-primary">도서 배송지 주소</label>
                     <div class="input-group mb-2">
-                        <input type="text" th:field="*{zipcode}" class="form-control" placeholder="우편번호" readonly>
                         <button class="btn btn-outline-secondary" type="button" onclick="findAddress()">주소 찾기</button>
                     </div>
                     <input type="text" th:field="*{address}" class="form-control mb-2" placeholder="기본 주소" readonly>
-                    <input type="text" th:field="*{detailAddress}" class="form-control" placeholder="상세 주소 입력">
                 </div>
 
                 <hr class="my-4">
 
                 <div class="mb-3">
                     <label class="form-label fw-semibold">새 비밀번호</label>
-                    <input type="password" th:field="*{password}" class="form-control" placeholder="변경할 경우에만 입력">
+                    <input type="password" th:field="*{newPassword}" class="form-control" placeholder="변경할 경우에만 입력">
                 </div>
 
                 <div class="mb-3">
@@ -78,7 +76,7 @@
 
                 <div class="d-grid gap-2">
                     <button type="submit" class="btn btn-primary">수정 완료</button>
-                    <a th:href="@{/mypage}" class="btn btn-outline-secondary">취소</a>
+                    <a th:href="@{/mypage/mypage}" class="btn btn-outline-secondary">취소</a>
                 </div>
             </form>
         </div>
@@ -90,9 +88,7 @@
     function findAddress() {
         new daum.Postcode({
             oncomplete: function(data) {
-                document.getElementById('zipcode').value = data.zonecode;
                 document.getElementById('address').value = data.address;
-                document.getElementById('detailAddress').focus();
             }
         }).open();
     }

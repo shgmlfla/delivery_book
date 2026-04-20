@@ -43,6 +43,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/subscription/**").authenticated()
                         .requestMatchers("/book/**", "/api/books/**").permitAll()
                         .requestMatchers("/api/mypage/**", "/mypage/**").permitAll()
+                        .requestMatchers("/api/member/**", "/member/**").permitAll()
                         .requestMatchers("/payment/**", "/success.html", "/fail.html", "/css/custom.css", "/css/**","/style.css", "/js/**", "/images/**", "/favicon.ico").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**","/swagger-ui.html").permitAll()
