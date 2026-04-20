@@ -722,3 +722,36 @@ h1,h2,h3,h4,h5,h6 {
     height: 740px;
   }
 }
+/*추가*/
+.offcanvas-body {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    min-height: auto !important;
+}
+
+.offcanvas-body .navbar-nav {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+.offcanvas-body .nav-link {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    line-height: 1.2 !important;
+}
+
+header .navbar {
+    min-height: 40px !important;
+}
+
+
+.form-select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: none !important;
+}
+
+.form-select::-ms-expand {
+    display: none;
+}

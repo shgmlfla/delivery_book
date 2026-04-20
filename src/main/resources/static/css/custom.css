@@ -17,3 +17,7 @@
   width: 100%;
 }
 
+.main-logo-container img {
+    max-width: 150px;
+    height: auto;
+}
