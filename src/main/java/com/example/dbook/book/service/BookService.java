@@ -16,6 +16,7 @@ public class BookService {
     private final BookRepository bookRepository;
     private final BookApiService bookApiService;
 
+    // 도서 100권 선정
     @Transactional
     public void updateMonthlyBooks(String searchDt, int age, String gender) {
         try {
