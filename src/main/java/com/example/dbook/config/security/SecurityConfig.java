@@ -41,7 +41,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**", "/auth/**", "/").permitAll()
                         .requestMatchers("/api/subscription/**").authenticated()
-                        .requestMatchers("/book/**", "/api/books/**").permitAll()
+                        .requestMatchers("/book/**", "/api/books/**", "/searchResults").permitAll()
                         .requestMatchers("/api/mypage/**", "/mypage/**").permitAll()
                         .requestMatchers("/api/member/**", "/member/**").permitAll()
                         .requestMatchers("/payment/**", "/success.html", "/fail.html", "/css/custom.css", "/css/**","/style.css", "/js/**", "/images/**", "/favicon.ico").permitAll()

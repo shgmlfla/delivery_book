@@ -10,7 +10,7 @@
 <body>
 
 <div class="container d-flex justify-content-center">
-  <div class="card login-container p-4 shadow-sm">
+  <div class="card login-container p-4 shadow-sm" style="min-width: 350px;">
     <div class="card-body">
 
       <h3 class="text-center mb-4">Login</h3>
@@ -30,16 +30,17 @@
       </div>
 
       <div class="text-center mb-4">
-        <a href="#" class="text-decoration-none">회원가입</a>
-        <span class="mx-1">|</span>
+        <a th:href="@{/member/signup}" class="text-decoration-none">회원가입</a>
+        <!--<span class="mx-1">|</span>
         <a href="#" class="text-decoration-none">아이디 찾기</a>
         <span class="mx-1">|</span>
-        <a href="#" class="text-decoration-none">비밀번호 찾기</a>
+        <a href="#" class="text-decoration-none">비밀번호 찾기</a>-->
       </div>
 
+      <!--로그인
       <button class="btn social-btn kakao">카카오 로그인</button>
       <button class="btn social-btn naver">네이버 로그인</button>
-      <button class="btn social-btn google">구글 로그인</button>
+      <button class="btn social-btn google">구글 로그인</button>-->
 
     </div>
   </div>
