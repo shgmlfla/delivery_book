@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:16.9
+    container_name: dbook-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=dbook
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - dbook-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d dbook" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: dbook-app
+    restart: unless-stopped
+    depends_on:
+      - db:
+          condition : service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://dbook-db:5432/dbook
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    ports:
+      - "8080:8080"
+    networks:
+      - dbook-network
+
+volumes:
+  db_data: {}
+
+networks:
+  dbook-network:
+    driver: bridge
