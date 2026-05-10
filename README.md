@@ -10,7 +10,7 @@ JAVA / SpringBoot / PostgreSQL
 
 ## ⌨️ ERD
 
-![image.png](attachment:0bde6a5b-cc5e-4089-aae9-73a12bd20947:image.png)
+<img width="992" height="736" alt="image" src="https://github.com/user-attachments/assets/c4439e71-a455-4e5f-8365-95d26cbf6bb4" />
 
 [소개]
 
