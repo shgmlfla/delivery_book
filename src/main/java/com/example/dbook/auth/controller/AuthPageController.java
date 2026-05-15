@@ -1,6 +1,6 @@
 package com.example.dbook.auth.controller;
 
-import com.example.dbook.auth.dto.SignupRequestDto;
+import com.example.dbook.auth.dto.SignUpRequestDto;
 import com.example.dbook.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -26,7 +26,7 @@ public class AuthPageController {
     }
 
     @PostMapping("/signup")
-    public String signup(SignupRequestDto dto) {
+    public String signup(SignUpRequestDto dto) {
         memberService.signup(dto);
         return "redirect:/auth/login";
     }

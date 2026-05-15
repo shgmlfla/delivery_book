@@ -1,7 +1,7 @@
 package com.example.dbook.member.service;
 
-import com.example.dbook.auth.dto.SignupRequestDto;
-import com.example.dbook.auth.dto.SignupResponseDto;
+import com.example.dbook.auth.dto.SignUpRequestDto;
+import com.example.dbook.auth.dto.SignUpResponseDto;
 import com.example.dbook.member.dto.MemberEditDto;
 import com.example.dbook.member.entity.Member;
 import com.example.dbook.member.repository.MemberRepository;
@@ -18,7 +18,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public SignupResponseDto signup(SignupRequestDto request){
+    public SignUpResponseDto signup(SignUpRequestDto request){
         if (memberRepository.existsByEmail(request.getEmail())){
             throw new RuntimeException("이미 가입된 이메일입니다.");
         }
@@ -37,7 +37,7 @@ public class MemberService {
 
         memberRepository.save(member);
 
-        return new SignupResponseDto(
+        return new SignUpResponseDto(
                 member.getId(),
                 member.getEmail()
         );

@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 
 @Data
 @NoArgsConstructor
-public class SignupRequestDto {
+public class SignUpRequestDto {
 
     @Schema(description = "이메일")
     @Email(message = "올바른 이메일 형식이 아닙니다.")

@@ -1,6 +1,4 @@
 package com.example.dbook.auth.controller;
-import com.example.dbook.auth.dto.SignupRequestDto;
-import com.example.dbook.common.dto.ApiResponse;
 import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;

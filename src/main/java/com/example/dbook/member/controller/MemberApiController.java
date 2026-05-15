@@ -1,6 +1,6 @@
 package com.example.dbook.member.controller;
 
-import com.example.dbook.auth.dto.SignupRequestDto;
+import com.example.dbook.auth.dto.SignUpRequestDto;
 import com.example.dbook.common.dto.ApiResponse;
 import com.example.dbook.config.security.CustomUserDetails;
 import com.example.dbook.member.dto.MemberEditDto;
@@ -23,7 +23,7 @@ public class MemberApiController {
     private final MemberService memberService;
 
     @PostMapping("/signup")
-    public ResponseEntity<ApiResponse<?>> signup(@RequestBody @Valid SignupRequestDto dto){
+    public ResponseEntity<ApiResponse<?>> signup(@RequestBody @Valid SignUpRequestDto dto){
         memberService.signup(dto);
         return ResponseEntity.ok(ApiResponse.ok("회원가입 성공", null));
     }
