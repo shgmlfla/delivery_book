@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
-    <title>FoodMart - Free eCommerce Grocery Store HTML Website Template</title>
+    <title>Delivery book - Book OWL</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -72,9 +72,9 @@
                       <div class="product-item swiper-slide"
                            th:each="hotTrendBooks : ${hotTrendBooks}">
 
-                        <a href="#" class="btn-wishlist">
+                        <!--<a href="#" class="btn-wishlist">
                           <svg width="24" height="24"><use xlink:href="#heart"></use></svg>
-                        </a>
+                        </a>-->
 
                         <figure>
                           <a th:href="@{/book/details(isbn=${hotTrendBooks.isbn13})}" title="Book Detail">
@@ -148,10 +148,10 @@
                                 <div class="product-item swiper-slide"
                                      th:each="newbook : ${newBooks}">
 
-                                    <a href="#" class="btn-wishlist">
+                                    <!--<a href="#" class="btn-wishlist">
                                         <svg width="24" height="24"><use xlink:href="#heart"></use></svg>
                                     </a>
-
+-->
                                     <figure>
                                       <a th:href="@{/book/details(isbn=${newbook.isbn13})}" title="Book Detail">
                                         <img th:src="${newbook.bookImageURL}" class="tab-image">
@@ -225,9 +225,9 @@
                           <div class="product-item swiper-slide"
                                th:each="book : ${bestSellerBooks}">
 
-                              <a href="#" class="btn-wishlist">
+                              <!--<a href="#" class="btn-wishlist">
                                   <svg width="24" height="24"><use xlink:href="#heart"></use></svg>
-                              </a>
+                              </a>-->
 
                               <figure>
                                   <a th:href="@{/book/details(isbn=${book.isbn13})}" title="Book Detail">
@@ -403,9 +403,7 @@
     <div id="footer-bottom">
       <div class="container-fluid">
         <div class="row">
-          <div class="col-md-6 copyright">
-            <p>© 2023 Foodmart. All rights reserved.</p>
-          </div>
+          <div class="col-md-6 copyright"></div>
           <div class="col-md-6 credit-link text-start text-md-end">
             <p>Free HTML Template by <a href="https://templatesjungle.com/">TemplatesJungle</a> Distributed by <a href="https://themewagon">ThemeWagon</a></p>
           </div>
