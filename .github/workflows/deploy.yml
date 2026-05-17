@@ -43,10 +43,12 @@ jobs:
         username: ${{ secrets.EC2_USERNAME }}
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
+          cd ~/dbook
+          
           export DB_USERNAME=${{ secrets.DB_USERNAME }}
           export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
 
-          docker-compose down
-          docker-compose pull
+          docker compose down
+          docker compose pull
 
-          docker-compose up -d
+          docker compose up -d
