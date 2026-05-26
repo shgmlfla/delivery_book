@@ -34,7 +34,7 @@ JAVA / SpringBoot / PostgreSQL
 
 **화면 및 기능 소개**
 
-[로그인 및 회원가입]
+[로그인 및 회원가입]  
 <img width="353" height="357" alt="image" src="https://github.com/user-attachments/assets/0fed9880-27c6-405b-bdc7-9928df6736ea" />
 
 <img width="403" height="790" alt="image" src="https://github.com/user-attachments/assets/be8f9a6a-6974-491b-8734-81f85380ed16" />
