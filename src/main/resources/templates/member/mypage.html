@@ -27,8 +27,7 @@
                 <div class="profile text-center p-4">
                     <img th:src="@{/images/user-profile.png}" alt="유저 프로필 이미지" class="profile-img mb-3">
                     <!-- 이미지 출처: https://www.flaticon.com/free-icon/user_847969?term=profile&page=1&position=15&origin=tag&related_id=847969 -->
-                    <!--<h3 class="member-name mb-2" th:text="${nickname}">회원 이름</h3>-->
-                    <h3 class="member-name mb-2">김회원님</h3>
+                    <h3 class="member-name mb-2" th:text="${myPageData.nickname}">회원 이름</h3>
                     <a th:href="@{/api/member/edit}" class="edit-btn">회원정보 수정</a>
                 </div>
             </div>
