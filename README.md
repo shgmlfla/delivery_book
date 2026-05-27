@@ -34,20 +34,20 @@ JAVA / SpringBoot / PostgreSQL
 
 **화면 및 기능 소개**
 
-[로그인 및 회원가입]
+[로그인 및 회원가입]  
 <img width="353" height="357" alt="image" src="https://github.com/user-attachments/assets/0fed9880-27c6-405b-bdc7-9928df6736ea" />
 
 <img width="403" height="790" alt="image" src="https://github.com/user-attachments/assets/be8f9a6a-6974-491b-8734-81f85380ed16" />
-
-[메인페이지]
+  
+[메인페이지]    
 <img width="1463" height="925" alt="image" src="https://github.com/user-attachments/assets/74adb7f1-ec87-45df-9354-92950031fa75" />
 
-
-[도서 검색 페이지]
+  
+[도서 검색 페이지]         
 <img width="1473" height="703" alt="image" src="https://github.com/user-attachments/assets/b51064c3-f95d-4ef4-97d1-4979c237b39a" />
 
-
-[마이페이지]
+  
+[마이페이지]  
 
 - DB에 저장된 인기 도서 100권 중 사용자가 읽은 도서를 제외한 4권 정기 배송 도서로 선정
 - 결제일 기준으로 결제 예정일 표시
@@ -55,11 +55,11 @@ JAVA / SpringBoot / PostgreSQL
 
 <img width="1451" height="699" alt="image" src="https://github.com/user-attachments/assets/77279000-da6b-4e1e-9ce8-e33049cb4a4f" />
 
-
-[결제 화면]
+  
+[결제 화면]  
 <img width="860" height="316" alt="image" src="https://github.com/user-attachments/assets/6e649730-cbc7-4b5f-834c-cdee27afc7b4" />
 
 <img width="930" height="779" alt="image" src="https://github.com/user-attachments/assets/b50f7780-d6a8-4c37-9858-5ca9a696a81e" />
-
+  
 
 - 토스페이먼츠를 이용한 결제 시스템 구현
