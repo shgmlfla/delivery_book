@@ -18,7 +18,7 @@ public class BookApiController {
     private final BookApiService bookApiService;
 
     @GetMapping("/hot_trend")
-    public List<HotTrendBookDto> getHotTrendBooks(@RequestParam("searchDt") String searchDt){
+    public List<HotTrendBookDto> getHotTrendBooks(@RequestParam("searchDt") String searchDt) throws Exception{
         return bookApiService.getHotTrendBooks(searchDt);
     }
 

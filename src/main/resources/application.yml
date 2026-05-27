@@ -5,7 +5,6 @@ spring:
   freemarker:
     cache: false
 
-
   application:
     name: dbook
 
@@ -35,10 +34,11 @@ payment:
   client:
     key: ${TOSS_PAYMENT_CLIENT_KEY}
   secret:
-    key : ${TOSS_PAYMENT_SECRET_KEY}
+    key: ${TOSS_PAYMENT_SECRET_KEY}
 
 library:
   default-code: "141553"
+  base-url: "http://data4library.kr/api/"
 
 logging:
   level:
@@ -51,8 +51,21 @@ server:
     include-message: always
     include-stacktrace: always
 
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 5
+        failureRateThreshold: 50
 
 
+        waitDurationInOpenState: 10000ms
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
 
+    instances:
+      bookApiCircuitBreaker:
+        baseConfig: default
 
 

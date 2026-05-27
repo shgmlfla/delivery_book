@@ -5,22 +5,22 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 @Component
 public class BookApiClient {
 
     private final RestClient restClient;
+    private final String BASE_URL;
+
+    public BookApiClient(RestClient.Builder builder,
+                         @Value("${library.base-url}") String baseUrl) {
+
+        this.BASE_URL = baseUrl;
+        this.restClient = builder.baseUrl(baseUrl).build();
+    }
 
     @Value("${book.api.key}")
     private String authkey;
 
-    private static final String BASE_URL = "http://data4library.kr/api/";
-
-    public BookApiClient(RestClient.Builder builder) {
-        this.restClient = builder.baseUrl(BASE_URL).build();
-    }
 
     //요즘 뜨는 책 (대출 급상승)
     public String getHotTrend(String searchDt){

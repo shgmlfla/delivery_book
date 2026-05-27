@@ -24,7 +24,7 @@ public class MainController {
     private final BookApiService bookApiService;
 
     @GetMapping("/")
-    public String main(Model model) {
+    public String main(Model model) throws Exception{
         String hotTrendsSearchDt = LocalDateTime.now().minusDays(3).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String startDt = LocalDate.now().minusMonths(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String newBookSearchDt = LocalDate.now().minusMonths(1).format(DateTimeFormatter.ofPattern("yyyy-MM"));
@@ -43,7 +43,7 @@ public class MainController {
     @GetMapping("/searchResults")
     public String searchResults(@RequestParam(value="title", required = false) String title,
                          @RequestParam(value="author", required = false) String author,
-                         Model model) {
+                         Model model) throws Exception{
 
         List<SearchBookDto> searchBookResults = bookApiService.getSearchBook(title, author);
 

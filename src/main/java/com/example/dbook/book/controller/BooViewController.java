@@ -22,7 +22,7 @@ public class BooViewController {
     private final BookService bookService;
 
     @GetMapping("/details")
-    public String bookDetails(@RequestParam("isbn") String isbn, Model model) {
+    public String bookDetails(@RequestParam("isbn") String isbn, Model model) throws Exception{
 
         List<SearchBookDto> result = bookApiService.searchByIsbn(isbn);
         SearchBookDto bookDetails = result.isEmpty() ? null : result.get(0);
