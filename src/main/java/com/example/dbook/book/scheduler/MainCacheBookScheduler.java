@@ -16,8 +16,7 @@ public class MainCacheBookScheduler {
 
     private final MainCacheBookService mainCacheBookService;
 
-    //@Scheduled(cron = "0 0 4 * * *")
-    @Scheduled(cron = "0 53 23 * * *")
+    @Scheduled(cron = "0 0 4 * * *")
     public void refreshMainCache(){
         log.info("메인 화면 도서 캐시 갱신 스케줄러 시작");
         mainCacheBookService.refreshMainApiCache();
