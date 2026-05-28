@@ -4,6 +4,9 @@ import com.example.dbook.book.dto.BestSellerBookDto;
 import com.example.dbook.book.dto.SearchBookDto;
 import com.example.dbook.book.dto.HotTrendBookDto;
 import com.example.dbook.book.dto.NewBookDto;
+import com.example.dbook.book.entity.CacheBookType;
+import com.example.dbook.book.entity.MainCacheBook;
+import com.example.dbook.book.repository.MainCacheBookRepository;
 import com.example.dbook.book.service.BookApiService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -21,21 +24,18 @@ import java.util.List;
 @AllArgsConstructor
 public class MainController {
 
+    private final MainCacheBookRepository mainCacheBookRepository;
     private final BookApiService bookApiService;
 
     @GetMapping("/")
     public String main(Model model) throws Exception{
-        String hotTrendsSearchDt = LocalDateTime.now().minusDays(3).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        String startDt = LocalDate.now().minusMonths(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        String newBookSearchDt = LocalDate.now().minusMonths(1).format(DateTimeFormatter.ofPattern("yyyy-MM"));
-
-        List<HotTrendBookDto> hotTrendBookList = bookApiService.getHotTrendBooks(hotTrendsSearchDt);
-        List<NewBookDto> newBookList = bookApiService.getNewBook(newBookSearchDt);
-        List<BestSellerBookDto> bestSellerBookList = bookApiService.getBestSeller(startDt);
+        List<MainCacheBook> hotTrendBookList = mainCacheBookRepository.findAllByCacheBookType(CacheBookType.HOT_TREND);
+        List<MainCacheBook> bestSellerBookList = mainCacheBookRepository.findAllByCacheBookType(CacheBookType.BEST_SELLER);
+        List<MainCacheBook> newBookList = mainCacheBookRepository.findAllByCacheBookType(CacheBookType.NEW_BOOK);
 
         model.addAttribute("hotTrendBooks", hotTrendBookList);
-        model.addAttribute("newBooks", newBookList);
         model.addAttribute("bestSellerBooks", bestSellerBookList);
+        model.addAttribute("newBooks", newBookList);
 
         return "main/mainPage";
     }

@@ -77,14 +77,14 @@
                         </a>-->
 
                         <figure>
-                          <a th:href="@{/book/details(isbn=${hotTrendBooks.isbn13})}" title="Book Detail">
-                            <img th:src="${hotTrendBooks.bookImageURL}" class="tab-image">
+                          <a th:href="@{/book/details(isbn=${hotTrendBooks.isbn})}" title="Book Detail">
+                            <img th:src="${hotTrendBooks.imageUrl}" class="tab-image">
                           </a>
                         </figure>
 
-                        <h3 th:text="${hotTrendBooks.bookname}">책 제목</h3>
+                        <h3 th:text="${hotTrendBooks.title}">책 제목</h3>
 
-                        <span class="qty" th:text="${hotTrendBooks.authors}">저자</span>
+                        <span class="qty" th:text="${hotTrendBooks.author}">저자</span>
 
                         <span class="rating">
                                 <svg width="24" height="24" class="text-primary">
@@ -153,14 +153,14 @@
                                     </a>
 -->
                                     <figure>
-                                      <a th:href="@{/book/details(isbn=${newbook.isbn13})}" title="Book Detail">
-                                        <img th:src="${newbook.bookImageURL}" class="tab-image">
+                                      <a th:href="@{/book/details(isbn=${newbook.isbn})}" title="Book Detail">
+                                        <img th:src="${newbook.imageUrl}" class="tab-image">
                                       </a>
                                     </figure>
 
-                                    <h3 th:text="${newbook.bookname}">책 제목</h3>
+                                    <h3 th:text="${newbook.title}">책 제목</h3>
 
-                                    <span class="qty" th:text="${newbook.authors}">저자</span>
+                                    <span class="qty" th:text="${newbook.author}">저자</span>
 
                                     <span class="rating">
                                 <svg width="24" height="24" class="text-primary">
@@ -230,20 +230,19 @@
                               </a>-->
 
                               <figure>
-                                  <a th:href="@{/book/details(isbn=${book.isbn13})}" title="Book Detail">
-                                    <img th:src="${book.bookImageURL}" class="tab-image">
+                                  <a th:href="@{/book/details(isbn=${book.isbn})}" title="Book Detail">
+                                    <img th:src="${book.imageUrl}" class="tab-image">
                                   </a>
                               </figure>
 
-                              <h3 th:text="${book.bookname}">책 제목</h3>
+                              <h3 th:text="${book.title}">책 제목</h3>
 
-                              <span class="qty" th:text="${book.authors}">저자</span>
+                              <span class="qty" th:text="${book.author}">저자</span>
 
                               <span class="rating">
                                 <svg width="24" height="24" class="text-primary">
                                 <use xlink:href="#star-solid"></use>
                                 </svg>
-                              <span th:text="${book.loan_count}">0</span>
                               </span>
 
                               <!--<div class="d-flex align-items-center justify-content-between">
