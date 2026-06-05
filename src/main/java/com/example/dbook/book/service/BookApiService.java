@@ -1,7 +1,6 @@
 package com.example.dbook.book.service;
 
 import com.example.dbook.book.dto.*;
-import com.example.dbook.main.service.BookApiClient;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +29,7 @@ public class BookApiService {
     @Value("${library.default-code}")
     private String defaultLibCode;
 
-    @CircuitBreaker(name = "bookApiCircuitBreaker", fallbackMethod = "getHotTrendBooksFallback")
+    @CircuitBreaker(name = "hotTrendCircuitBreaker", fallbackMethod = "getHotTrendBooksFallback")
     public List<HotTrendBookDto> getHotTrendBooks(String searchDt) throws Exception{
 
         String json = bookApiClient.getHotTrend(searchDt);
@@ -76,7 +75,7 @@ public class BookApiService {
         return t -> seen.add(keyExtractor.apply(t));
     }
 
-    @CircuitBreaker(name = "bookApiCircuitBreaker", fallbackMethod = "getNewBookFallback")
+    @CircuitBreaker(name = "newBookCircuitBreaker", fallbackMethod = "getNewBookFallback")
     public List<NewBookDto> getNewBook(String newBookSearchDt) throws Exception{
 
         String json = bookApiClient.getNewBook(defaultLibCode, newBookSearchDt);
@@ -105,7 +104,7 @@ public class BookApiService {
         return Collections.emptyList();
     }
 
-    @CircuitBreaker(name = "bookApiCircuitBreaker", fallbackMethod = "getBestSellerFallback")
+    @CircuitBreaker(name = "bestSellerCircuitBreaker", fallbackMethod = "getBestSellerFallback")
     public List<BestSellerBookDto> getBestSeller(String searchDt) throws Exception{
 
         String json = bookApiClient.getBestSeller(searchDt);
@@ -135,7 +134,7 @@ public class BookApiService {
         return Collections.emptyList();
     }
 
-    @CircuitBreaker(name = "bookApiCircuitBreaker", fallbackMethod = "getSearchBookFallback")
+    @CircuitBreaker(name = "searchBookCircuitBreaker", fallbackMethod = "getSearchBookFallback")
     public List<SearchBookDto> getSearchBook(String title, String author) throws Exception{
 
         String json = bookApiClient.getSearchBook(title, author);
@@ -165,7 +164,7 @@ public class BookApiService {
         return Collections.emptyList();
     }
 
-    @CircuitBreaker(name = "bookApiCircuitBreaker", fallbackMethod = "searchByIsbnFallback")
+    @CircuitBreaker(name = "searchByIsbnCircuitBreaker", fallbackMethod = "searchByIsbnFallback")
     public List<SearchBookDto> searchByIsbn(String isbn) throws Exception{
 
         String json = bookApiClient.getSearchByIsbn(isbn);
@@ -197,7 +196,7 @@ public class BookApiService {
     }
 
     //랜덤
-    @CircuitBreaker(name = "bookApiCircuitBreaker", fallbackMethod = "getRecommendedBookFallback")
+    @CircuitBreaker(name = "recommendCircuitBreaker", fallbackMethod = "getRecommendedBookFallback")
     public List<RecommendedBookDto> getRecommendedBook(String searchDt,  int age, String gender, int pageSize)
         throws Exception{
 

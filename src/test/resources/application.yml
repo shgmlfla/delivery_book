@@ -1,0 +1,55 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE
+    driver-class-name: org.h2.Driver
+    username: ${TEST_DB_USERNAME}
+    password: ${TEST_DB_PASSWORD}
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+jwt:
+  secret: "dbookTestSecretKeyJwtTokenMockDataValue2026"
+  access-token-expiration: 1800000
+
+book:
+  api:
+    key: "mock_book_api_key"
+
+payment:
+  client:
+    key: "mock_toss_payments_client_key"
+  secret:
+    key: "mock_toss_payments_secret_key"
+
+library:
+  default-code: "141553"
+  base-url: "http://data4library.kr/api/"
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10000ms
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+
+    instances:
+      hotTrendCircuitBreaker:
+        baseConfig: default
+
+      newBookCircuitBreaker:
+        baseConfig: default
+
+logging:
+  level:
+    com.example.dbook.book.service.BookApiService: OFF

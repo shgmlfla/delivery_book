@@ -1,4 +1,4 @@
-package com.example.dbook.main.service;
+package com.example.dbook.book.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -40,7 +40,7 @@ public class BookApiClient {
     //신작 도서
     public String getNewBook(String defaultLibCode, String searchDt){
         String url = UriComponentsBuilder
-                .fromHttpUrl(BASE_URL + "newArrivalBook")
+                .fromHttpUrl(BASE_URL + "newArrivalBookTEST")
                 .queryParam("authKey", authkey)
                 .queryParam("libCode", defaultLibCode)
                 .queryParam("searchDt", searchDt)
