@@ -38,14 +38,6 @@ public class Member {
     @Column
     private Integer age;
 
-    @Column
-    private String billingKey;
-
-    public void updateBillingKey(String billingKey){
-        this.billingKey = billingKey;
-        this.is_subscriber = "Y";
-    }
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MemberStatus status;
@@ -84,5 +76,12 @@ public class Member {
 
     public void updateAddress(String address) {
         this.address = address;
+    }
+
+    public void updateSubscriptionStatus(String is_subscriber){
+        if(!"Y".equals(is_subscriber) && !"N".equals(is_subscriber)){
+            throw new IllegalArgumentException("올바르지 않은 구독 status 입니다. (Y/N)");
+        }
+        this.is_subscriber = is_subscriber;
     }
 }
