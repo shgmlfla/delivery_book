@@ -1,16 +1,13 @@
 package com.example.dbook.payment.controller;
 
+import com.example.dbook.common.dto.ApiResponse;
 import com.example.dbook.member.entity.Member;
 import com.example.dbook.member.repository.MemberRepository;
-import com.example.dbook.order.entity.PlanType;
 import com.example.dbook.payment.service.PaymentService;
-import jakarta.transaction.Transactional;
+import com.example.dbook.subscription.dto.SubscriptionRequest;
+
 import lombok.RequiredArgsConstructor;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,109 +15,59 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/payment")
+@Slf4j
 public class PaymentController {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final MemberRepository memberRepository;
     private final PaymentService paymentService;
 
-    @Value("${payment.client.key}")
+    @Value("${toss.payment.client-key}")
     private String CLIENT_KEY;
 
-    @Value("${payment.secret.key}")
-    private String  API_SECRET_KEY;
-
     @GetMapping("/billing")
-    public String getBillingPage(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+    public String getBillingPage(@AuthenticationPrincipal UserDetails userDetails, Model model){
         Member member = memberRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
 
-        String customerKey = "customer_" + member.getId();
         model.addAttribute("clientKey", CLIENT_KEY);
-        model.addAttribute("customerKey", member.getId() + "_dbook");
-        model.addAttribute("member", member); 
+        model.addAttribute("customerKey", "customer_" + member.getId());
+        model.addAttribute("member", member);
 
         return "payment/billing";
     }
 
     @PostMapping("/issue-billing-key")
     @ResponseBody
-    @Transactional
-    public ResponseEntity<JSONObject> issueBillingKey(@RequestBody String jsonBody, @AuthenticationPrincipal UserDetails userDetails) throws Exception {
-        JSONObject requestData = parseRequestData(jsonBody);
+    public ResponseEntity<ApiResponse<String>> issueBillingKey(@RequestBody SubscriptionRequest request, @AuthenticationPrincipal UserDetails userDetails) {
 
-        JSONObject response = sendRequest(requestData, API_SECRET_KEY, "https://api.tosspayments.com/v1/billing/authorizations/issue");
-
-        String planName = (String) requestData.get("planName");
-        Object priceObj = requestData.get("price");
-        Integer price = 0;
-
-        if (priceObj != null) {
-            price = Integer.parseInt(String.valueOf(priceObj));
-        }
-        PlanType planType = PlanType.valueOf((String) requestData.get("planType"));
-
-        if (!response.containsKey("error")) {
-            String billingKey = (String) response.get("billingKey");
-            String customerKey = (String) requestData.get("customerKey");
-
-            Member member = memberRepository.findByEmail(userDetails.getUsername())
-                    .orElseThrow(() -> new RuntimeException("유저 없음"));
-
-            member.updateBillingKey(billingKey);
-            memberRepository.save(member);
-
-            try{
-                paymentService.processSubscriptionPayment(member, planName, price, planType);
-            }
-            catch (Exception e){
-                logger.error("빌링 키 발급 완료 / 결제 승인 시 오류 발생: ", e);
-            }
-
-            logger.info("성공! customerKey: {}, 발급된 billingKey: {}", customerKey, billingKey);
-        }
-
-        return ResponseEntity.status(response.containsKey("error") ? 400 : 200).body(response);
-    }
-
-    private JSONObject parseRequestData(String jsonBody) {
         try {
-            return (JSONObject) new JSONParser().parse(jsonBody);
+            String email = userDetails.getUsername();
+
+            paymentService.completeSubscriptionProcess(
+                    request.getAuthKey(),
+                    request.getCustomerKey(),
+                    email,
+                    request.getPlanType()
+            );
+
+            return ResponseEntity.ok(ApiResponse.ok("정기 구독 및 결제 완료", null));
+
+
+        } catch (IllegalArgumentException e) {
+            log.error("구독 처리 오류 발생: {}", e.getMessage());
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error(400, e.getMessage()));
         } catch (Exception e) {
-            return new JSONObject();
-        }
-    }
-
-    private JSONObject sendRequest(JSONObject requestData, String secretKey, String urlString) throws IOException {
-        URL url = new URL(urlString);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestProperty("Authorization", "Basic " + Base64.getEncoder().encodeToString((secretKey + ":").getBytes(StandardCharsets.UTF_8)));
-        connection.setRequestProperty("Content-Type", "application/json");
-        connection.setRequestMethod("POST");
-        connection.setDoOutput(true);
-
-        try (OutputStream os = connection.getOutputStream()) {
-            os.write(requestData.toString().getBytes(StandardCharsets.UTF_8));
+            log.error("구독 처리 중 서버 시스템 오류 발생", e);
+            return ResponseEntity.internalServerError()
+                    .body(ApiResponse.error(500, "결제 중 오류 발생"));
         }
 
-        try (InputStream resStream = connection.getResponseCode() == 200 ? connection.getInputStream() : connection.getErrorStream();
-             Reader reader = new InputStreamReader(resStream, StandardCharsets.UTF_8)) {
-            return (JSONObject) new JSONParser().parse(reader);
-        } catch (Exception e) {
-            JSONObject err = new JSONObject();
-            err.put("error", "연동 실패");
-            return err;
-        }
     }
 
     @GetMapping("/success")

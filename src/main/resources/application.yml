@@ -31,10 +31,10 @@ book:
     key: ${BOOK_API_KEY}
 
 payment:
-  client:
-    key: ${TOSS_PAYMENT_CLIENT_KEY}
-  secret:
-    key: ${TOSS_PAYMENT_SECRET_KEY}
+  toss:
+    client-key: ${TOSS_PAYMENT_CLIENT_KEY}
+    secret-key: ${TOSS_PAYMENT_SECRET_KEY}
+
 
 library:
   default-code: "141553"

@@ -4,128 +4,89 @@ import com.example.dbook.member.entity.Member;
 import com.example.dbook.member.repository.MemberRepository;
 import com.example.dbook.order.entity.Orders;
 import com.example.dbook.order.entity.PlanType;
-import com.example.dbook.order.entity.Subscription;
 import com.example.dbook.order.repository.OrderRepository;
-import com.example.dbook.order.service.SubscriptionService;
+import com.example.dbook.payment.dto.TossInitialPaymentResponse;
+import com.example.dbook.payment.dto.TossSubscriptionPaymentRequest;
+import com.example.dbook.payment.entity.BillingKey;
+import com.example.dbook.payment.repository.BillingKeyRepository;
+import com.example.dbook.subscription.service.SubscriptionService;
+import com.example.dbook.payment.dto.BillingKeyResponse;
 import com.example.dbook.payment.entity.Payment;
 import com.example.dbook.payment.repository.PaymentRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
+
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.util.Base64;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly=true)
 @Slf4j
 public class PaymentService {
 
+    private final PaymentProcessManager paymentProcessManager;
+    private final MemberRepository memberRepository;
     private final OrderRepository orderRepository;
     private final PaymentRepository paymentRepository;
     private final SubscriptionService subscriptionService;
-
-    @Value("${payment.secret.key}")
-    private String secretKey;
-
+    private final BillingKeyRepository billingKeyRepository;
 
     @Transactional
-    public void processSubscriptionPayment(Member member, String planName, Integer price, PlanType planType) throws Exception{
+    public void completeSubscriptionProcess(String authKey, String customerKey, String email, PlanType planType){
 
-        String tossOrderId = "ORD_" + member.getId() + "_" + System.currentTimeMillis();
+        // 회원 조회
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
-        Orders order = Orders.builder()
+        //ORDERS 테이블 READY 상태
+        String tossOrderId = "SUB_" + member.getId() + "_" + System.currentTimeMillis();
+        Orders orders = Orders.builder()
                 .member(member)
                 .tossOrderId(tossOrderId)
                 .orderDate(LocalDateTime.now())
-                .total_price(price)
+                .total_price(planType.getPrice())
                 .orderStatus(Orders.OrderStatus.READY)
                 .orderType(Orders.OrderType.SUBSCRIPTION)
                 .build();
-        orderRepository.save(order);
+        orderRepository.save(orders);
 
-        //토스 api 호출
-        JSONObject requestData = new JSONObject();
-        requestData.put("amount", price);
-        requestData.put("orderId", tossOrderId);
-        requestData.put("orderName", planName + " 정기 구독");
-        requestData.put("customerKey", "customer_" + member.getId());
+        //빌링키 조회
+        Optional<BillingKey> existingKey = billingKeyRepository.findByMemberId(member.getId());
+        String billingKey;
 
-        String url = "https://api.tosspayments.com/v1/billing/" + member.getBillingKey();
-        JSONObject response = sendRequest(requestData, secretKey, url);
-
-        if (response.containsKey("paymentKey") && "DONE".equals(response.get("status"))) {
-            completePayment(order, member, response, planType);
+        if (existingKey.isPresent()) {
+            log.info("기존 빌링키 회원 ID: {}", member.getId());
+            billingKey = existingKey.get().getBillingKey();
         } else {
-            failPayment(order, response);
+            log.info("새로운 빌링키 발급 - 회원 ID: {}", member.getId());
+            BillingKeyResponse billingKeyResponse = paymentProcessManager.requestAndSaveBillingKey(authKey, customerKey, email);
+            billingKey = billingKeyResponse.getBillingKey();
         }
-    }
 
-    private void completePayment(Orders order, Member member, JSONObject response, PlanType planType){
-        String approvedAtStr = (String) response.get("approvedAt");
-        LocalDateTime approvedAt = OffsetDateTime.parse(approvedAtStr).toLocalDateTime();
-
+        //첫 결제
+        TossInitialPaymentResponse approvalResponse = paymentProcessManager.executeInitialSubscriptionPayment(billingKey, tossOrderId, planType, member);
+        
+        //결제 내역(payment) 저장
         Payment payment = Payment.builder()
-                .tossPaymentKey((String) response.get("paymentKey"))
-                .tossOrderId((String) response.get("orderId"))
-                .amount(Long.parseLong(response.get("totalAmount").toString()))
-                .paymentMethod((String) response.get("method"))
-                .approvedAt(approvedAt)
-                .order(order)
+                .tossPaymentKey(null)
+                .tossOrderId(tossOrderId)
+                .amount(Long.valueOf(planType.getPrice()))
+                .paymentMethod("CARD")
+                .approvedAt(LocalDateTime.now())
+                .order(orders)
                 .member(member)
                 .build();
-
         paymentRepository.save(payment);
 
-        order.setOrderStatus(Orders.OrderStatus.PAYMENT_COMPLETED);
+        // 주문상태 READY -> 완료
+        orders.setOrderStatus(Orders.OrderStatus.PAYMENT_COMPLETED);
 
         subscriptionService.createOrUpadateSubscription(member.getId(), planType);
 
-        log.info("결제 성공");
-    }
-
-    private void failPayment(Orders order, JSONObject response) {
-        String errorCode = (String) response.get("code");
-        String errorMessage = (String) response.get("message");
-
-        order.setOrderStatus(Orders.OrderStatus.PAYMENT_FAILED);
-
-        log.error("결제 실패");
-    }
-
-    private JSONObject sendRequest(JSONObject requestData, String secretKey, String urlString) throws IOException {
-        HttpURLConnection connection = createConnection(secretKey, urlString);
-        try (OutputStream os = connection.getOutputStream()) {
-            os.write(requestData.toString().getBytes(StandardCharsets.UTF_8));
-        }
-
-        try (InputStream responseStream = connection.getResponseCode() == 200 ? connection.getInputStream() : connection.getErrorStream();
-             Reader reader = new InputStreamReader(responseStream, StandardCharsets.UTF_8)) {
-            return (JSONObject) new JSONParser().parse(reader);
-        } catch (Exception e) {
-            log.error("Error reading response", e);
-            JSONObject errorResponse = new JSONObject();
-            errorResponse.put("error", "Error reading response");
-            return errorResponse;
-        }
-
-    }
-    private HttpURLConnection createConnection(String secretKey, String urlString) throws IOException {
-        URL url = new URL(urlString);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestProperty("Authorization", "Basic " + Base64.getEncoder().encodeToString((secretKey + ":").getBytes(StandardCharsets.UTF_8)));
-        connection.setRequestProperty("Content-Type", "application/json");
-        connection.setRequestMethod("POST");
-        connection.setDoOutput(true);
-        return connection;
+        log.info("구독 결제 시스템 완료 회원 ID: {}, 가입 플랜: {}", member.getId(), planType);
     }
 }
