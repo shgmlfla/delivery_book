@@ -16,13 +16,14 @@ import com.example.dbook.auth.dto.LoginRequestDto;
 import com.example.dbook.auth.dto.TokenDto;
 import com.example.dbook.config.security.JwtTokenProvider;
 import com.example.dbook.member.service.MemberService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.http.HttpStatus;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 
 @Tag(name = "Auth", description = "인증 및 인가 관리(로그인/회원가입)")
 @RestController
@@ -49,11 +50,15 @@ public class AuthApiController {
 
             TokenDto token = jwtTokenProvider.createToken(authentication);
 
-            Cookie cookie = new Cookie("accessToken", token.getAccessToken());
-            cookie.setPath("/");
-            cookie.setHttpOnly(true);
-            cookie.setMaxAge(3600);
-            response.addCookie(cookie);
+            ResponseCookie cookie = ResponseCookie.from("accessToken", token.getAccessToken())
+                    .path("/")
+                    .httpOnly(true)
+                    .maxAge(3600)
+                    .sameSite("Lax")
+                    //.secure(true)
+                    .build();
+
+            response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
             return ResponseEntity.ok(token);
 

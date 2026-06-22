@@ -9,12 +9,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -40,6 +44,9 @@ public class JwtTokenProvider {
 
         String username = authentication.getName();
 
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Long userId = userDetails.getId();
+
         String authorities = authentication.getAuthorities().stream()
                 .map(a -> a.getAuthority())
                 .collect(Collectors.joining(","));
@@ -49,6 +56,7 @@ public class JwtTokenProvider {
         String token = Jwts.builder()
                 .setSubject(username)
                 .claim("auth", authorities)
+                .claim("userId", userId)
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + accessTokenExpiration))
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -58,15 +66,29 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        String username = getUsername(token);
 
-        UserDetails userDetails =
-                userDetailsService.loadUserByUsername(username);
+        Claims claims = parseClaims(token);
+        String username = claims.getSubject();
+
+        Long userId = claims.get("userId", Long.class);
+
+        Object authClaim = claims.get("auth");
+        Collection<GrantedAuthority> authorities;
+
+        if (authClaim != null && !authClaim.toString().trim().isEmpty()) {
+            authorities = java.util.Arrays.stream(authClaim.toString().split(","))
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
+        } else {
+            authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        }
+
+        UserDetails userDetails = new CustomUserDetails(userId, username, authorities);
 
         return new UsernamePasswordAuthenticationToken(
                 userDetails,
                 null,
-                userDetails.getAuthorities()
+                authorities
         );
     }
 

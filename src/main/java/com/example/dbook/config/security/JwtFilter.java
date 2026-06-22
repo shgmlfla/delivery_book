@@ -26,14 +26,6 @@ public class JwtFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        String uri = request.getRequestURI();
-
-        if (uri.startsWith("/api/auth") || uri.startsWith("/auth") || uri.equals("/error")) {
-            System.out.println("DEBUG: 화이트리스트 경로 통과 - " + uri);
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         String token = resolveToken(request);
 
         if (token != null) {

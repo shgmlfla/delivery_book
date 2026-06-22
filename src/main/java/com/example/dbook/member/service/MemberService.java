@@ -32,6 +32,7 @@ public class MemberService {
                 .gender(request.getGender())
                 .age(request.getAge())
                 .is_subscriber("N")
+                .role(Member.Role.USER)
                 .status(Member.MemberStatus.ACTIVE)
                 .build();
 

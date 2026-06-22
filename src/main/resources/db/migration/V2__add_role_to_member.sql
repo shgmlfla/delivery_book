@@ -1,0 +1,5 @@
+ALTER TABLE member ADD COLUMN role VARCHAR(50);
+
+UPDATE member SET role = 'USER' WHERE role IS NULL;
+
+ALTER TABLE member ALTER COLUMN role SET NOT NULL;

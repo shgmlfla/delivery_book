@@ -43,7 +43,9 @@ public class PaymentService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         //ORDERS 테이블 READY 상태
-        String tossOrderId = "SUB_" + member.getId() + "_" + System.currentTimeMillis();
+        String uniqueSuffix = java.util.UUID.randomUUID().toString().substring(0, 8);
+        String tossOrderId = "SUB_" + member.getId() + "_" + System.currentTimeMillis() + "_" + uniqueSuffix;
+
         Orders orders = Orders.builder()
                 .member(member)
                 .tossOrderId(tossOrderId)

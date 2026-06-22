@@ -11,14 +11,23 @@ import java.util.List;
 public class CustomUserDetails implements UserDetails {
 
     private final Member member;
+    private final Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserDetails(Member member) {
+    public CustomUserDetails(Member member){
         this.member = member;
+        this.authorities = List.of(new SimpleGrantedAuthority("ROLE_" + member.getRole()));
     }
 
+    public CustomUserDetails(Long id, String email, Collection<? extends GrantedAuthority> authorities) {
+        this.member = Member.builder()
+                .id(id)
+                .email(email)
+                .build();
+        this.authorities = authorities;
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        return this.authorities;
     }
 
     public Member getUser() {

@@ -29,6 +29,12 @@ public class SubscriptionController {
     public String cancelSubscription(@PathVariable("id") Long subscriptionId,
                                                      @AuthenticationPrincipal CustomUserDetails userDetails,
                                                      RedirectAttributes rttr){
+
+        if (userDetails == null) {
+            rttr.addFlashAttribute("message", "로그인 세션이 만료되었습니다.");
+            return "redirect:/member/login";
+        }
+
         try{
             subscriptionService.cancelSubscription(subscriptionId, userDetails.getId());
             rttr.addFlashAttribute("message", "구독이 정상적으로 해지되었습니다.");
