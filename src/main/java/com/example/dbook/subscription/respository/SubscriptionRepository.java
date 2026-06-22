@@ -1,6 +1,6 @@
-package com.example.dbook.order.repository;
+package com.example.dbook.subscription.respository;
 
-import com.example.dbook.order.entity.Subscription;
+import com.example.dbook.subscription.entity.Subscription;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

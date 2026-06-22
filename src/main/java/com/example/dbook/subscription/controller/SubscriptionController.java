@@ -1,9 +1,7 @@
-package com.example.dbook.order.controller;
+package com.example.dbook.subscription.controller;
 
 import com.example.dbook.config.security.CustomUserDetails;
-import com.example.dbook.member.entity.Member;
-import com.example.dbook.member.repository.MemberRepository;
-import com.example.dbook.order.service.SubscriptionService;
+import com.example.dbook.subscription.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

@@ -1,4 +1,4 @@
-package com.example.dbook.order.entity;
+package com.example.dbook.subscription.entity;
 
 import com.example.dbook.member.entity.Member;
 import jakarta.persistence.*;

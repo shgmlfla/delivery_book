@@ -1,5 +1,6 @@
 package com.example.dbook.order.entity;
 
+import com.example.dbook.subscription.entity.Subscription;
 import jakarta.persistence.*;
 import lombok.*;
 

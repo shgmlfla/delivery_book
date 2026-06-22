@@ -1,16 +1,13 @@
-package com.example.dbook.order.service;
+package com.example.dbook.subscription.service;
 
 import com.example.dbook.member.entity.Member;
 import com.example.dbook.member.repository.MemberRepository;
-import com.example.dbook.order.dto.SubscriptionDto;
-import com.example.dbook.order.entity.Orders;
+import com.example.dbook.subscription.dto.SubscriptionDto;
 import com.example.dbook.order.entity.PlanType;
-import com.example.dbook.order.entity.Subscription;
-import com.example.dbook.order.entity.SubscriptionLog;
+import com.example.dbook.subscription.entity.Subscription;
 import com.example.dbook.order.repository.OrderRepository;
-import com.example.dbook.order.repository.SubscriptionRepository;
+import com.example.dbook.subscription.respository.SubscriptionRepository;
 import jakarta.transaction.Transactional;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;

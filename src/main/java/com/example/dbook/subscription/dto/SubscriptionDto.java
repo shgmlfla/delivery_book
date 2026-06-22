@@ -1,6 +1,6 @@
-package com.example.dbook.order.dto;
+package com.example.dbook.subscription.dto;
 
-import com.example.dbook.order.entity.Subscription;
+import com.example.dbook.subscription.entity.Subscription;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;

@@ -1,7 +1,7 @@
-package com.example.dbook.order.entity;
+package com.example.dbook.subscription.entity;
 
 import com.example.dbook.member.entity.Member;
-import com.example.dbook.order.repository.SubscriptionRepository;
+import com.example.dbook.order.entity.PlanType;
 import jakarta.persistence.*;
 import lombok.*;
 
