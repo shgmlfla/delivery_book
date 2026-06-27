@@ -2,6 +2,7 @@ package com.example.dbook.member.service;
 
 import com.example.dbook.auth.dto.SignUpRequestDto;
 import com.example.dbook.auth.dto.SignUpResponseDto;
+import com.example.dbook.common.exception.DuplicateEmailException;
 import com.example.dbook.member.dto.MemberEditDto;
 import com.example.dbook.member.entity.Member;
 import com.example.dbook.member.repository.MemberRepository;
@@ -20,7 +21,7 @@ public class MemberService {
 
     public SignUpResponseDto signup(SignUpRequestDto request){
         if (memberRepository.existsByEmail(request.getEmail())){
-            throw new RuntimeException("이미 가입된 이메일입니다.");
+            throw new DuplicateEmailException();
         }
 
         Member member = Member.builder()
