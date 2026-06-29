@@ -9,6 +9,7 @@ import com.example.dbook.payment.dto.TossInitialPaymentResponse;
 import com.example.dbook.payment.dto.TossSubscriptionPaymentRequest;
 import com.example.dbook.payment.entity.BillingKey;
 import com.example.dbook.payment.repository.BillingKeyRepository;
+import com.example.dbook.subscription.service.SubscriptionBookService;
 import com.example.dbook.subscription.service.SubscriptionService;
 import com.example.dbook.payment.dto.BillingKeyResponse;
 import com.example.dbook.payment.entity.Payment;
@@ -33,6 +34,7 @@ public class PaymentService {
     private final OrderRepository orderRepository;
     private final PaymentRepository paymentRepository;
     private final SubscriptionService subscriptionService;
+    private final SubscriptionBookService subscriptionBookService;
     private final BillingKeyRepository billingKeyRepository;
 
     @Transactional
@@ -87,6 +89,7 @@ public class PaymentService {
         // 주문상태 READY -> 완료
         orders.setOrderStatus(Orders.OrderStatus.PAYMENT_COMPLETED);
 
+        subscriptionBookService.selectedSubsriptionBooks(orders, member.getId());
         subscriptionService.createOrUpadateSubscription(member.getId(), planType);
 
         log.info("구독 결제 시스템 완료 회원 ID: {}, 가입 플랜: {}", member.getId(), planType);
