@@ -26,6 +26,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Value;
 
 @Tag(name = "Auth", description = "인증 및 인가 관리(로그인/회원가입)")
 @RestController
