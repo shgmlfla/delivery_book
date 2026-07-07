@@ -7,9 +7,12 @@ import com.example.dbook.payment.dto.BillingKeyResponse;
 import com.example.dbook.payment.dto.TossInitialPaymentResponse;
 import com.example.dbook.payment.dto.TossSubscriptionPaymentRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 
 @Component
@@ -18,11 +21,19 @@ public class TossPaymentsClient {
 
     private final WebClient tossWebClient;
 
+    @Value("${payment.toss.secret-key}")
+    private String secretKey;
+
+    private String getEncodedAuth() {
+        String auth = secretKey + ":";
+        return "Basic " + Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.UTF_8));
+    }
+
     //billing 키 발급
-    public BillingKeyResponse requestBillingKeyFromToss(BillingKeyRequest billingKeyRequest, String encodedSecretKey){
+    public BillingKeyResponse requestBillingKeyFromToss(BillingKeyRequest billingKeyRequest){
         return tossWebClient.post()
                 .uri("/v1/billing/authorizations/issue")
-                .header("Authorization", "Basic " + encodedSecretKey)
+                .header("Authorization", getEncodedAuth())
                 .bodyValue(billingKeyRequest)
                 .retrieve()
                 .bodyToMono(BillingKeyResponse.class)
@@ -30,10 +41,10 @@ public class TossPaymentsClient {
     }
 
     // 토스 서버에서 API 호출
-    private String createHeader(String billingKey, TossSubscriptionPaymentRequest request, String encodedSecretKey){
+    private String createHeader(String billingKey, TossSubscriptionPaymentRequest request){
         return tossWebClient.post()
                 .uri("/v1/billing/" + billingKey)
-                .header("Authorization", "Basic " + encodedSecretKey)
+                .header("Authorization", getEncodedAuth())
                 .bodyValue(request)
                 .retrieve()
                 .bodyToMono(String.class)
@@ -41,7 +52,7 @@ public class TossPaymentsClient {
     }
 
     //첫 달 결게
-    public TossInitialPaymentResponse executeInitialSubscriptionPayment(String billingKey, String tossOrderId, PlanType planType, Member member, String encodedSecretKey) {
+    public TossInitialPaymentResponse executeInitialSubscriptionPayment(String billingKey, String tossOrderId, PlanType planType, Member member) {
 
         TossSubscriptionPaymentRequest requestBody = TossSubscriptionPaymentRequest.builder()
                 .customerKey("customer_" + member.getId())
@@ -54,7 +65,7 @@ public class TossPaymentsClient {
 
         return tossWebClient.post()
                 .uri("/v1/billing/" + billingKey)
-                .header("Authorization", "Basic " + encodedSecretKey)
+                .header("Authorization", getEncodedAuth())
                 .bodyValue(requestBody)
                 .retrieve()
                 .bodyToMono(TossInitialPaymentResponse.class)
@@ -62,13 +73,13 @@ public class TossPaymentsClient {
     }
 
     //정기 결제
-    public String executeRegularPayment(String billingKey, TossSubscriptionPaymentRequest request, String encodedSecretKey){
+    public TossInitialPaymentResponse executeRegularPayment(String billingKey, TossSubscriptionPaymentRequest request){
         return tossWebClient.post()
                 .uri("/v1/billing/" + billingKey)
-                .header("Authorization", "Basic " + encodedSecretKey)
+                .header("Authorization", getEncodedAuth())
                 .bodyValue(request)
                 .retrieve()
-                .bodyToMono(String.class)
+                .bodyToMono(TossInitialPaymentResponse.class)
                 .block();
     }
 

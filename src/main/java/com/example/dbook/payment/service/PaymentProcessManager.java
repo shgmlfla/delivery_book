@@ -23,20 +23,15 @@ public class PaymentProcessManager {
     private final BillingKeyRepository billingKeyRepository;
     private final MemberRepository memberRepository;
 
-    @Value("${payment.toss.secret-key}")
-    private String secretKey;
-
-    // 토스서버에서 발급 받은 키 DB에 저장
+        // 토스서버에서 발급 받은 키 DB에 저장
     public BillingKeyResponse requestAndSaveBillingKey(String authkey, String customerKey, String email){
-
-        String encodedSecretKey = encodedSecretKeyToBase64(secretKey);
 
         BillingKeyRequest request = BillingKeyRequest.builder()
                 .authKey(authkey)
                 .customerKey(customerKey)
                 .build();
 
-        BillingKeyResponse response = tossPaymentsClient.requestBillingKeyFromToss(request, encodedSecretKey);
+        BillingKeyResponse response = tossPaymentsClient.requestBillingKeyFromToss(request);
 
         //DB에 저장
         saveBillingKey(response, email);
@@ -67,14 +62,11 @@ public class PaymentProcessManager {
 
     public TossInitialPaymentResponse executeInitialSubscriptionPayment(String billingKey, String tossOrderId, PlanType planType, Member member) {
 
-        String encodedSecretKey = encodedSecretKeyToBase64(secretKey);
-
         return tossPaymentsClient.executeInitialSubscriptionPayment(
                 billingKey,
                 tossOrderId,
                 planType,
-                member,
-                encodedSecretKey
+                member
         );
     }
 }
