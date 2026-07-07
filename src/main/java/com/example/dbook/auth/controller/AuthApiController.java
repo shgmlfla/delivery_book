@@ -1,4 +1,5 @@
 package com.example.dbook.auth.controller;
+import com.example.dbook.auth.service.AuthService;
 import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
+import java.util.Map;
 
 @Tag(name = "Auth", description = "인증 및 인가 관리(로그인/회원가입)")
 @RestController
@@ -34,33 +36,26 @@ public class AuthApiController {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberService memberService;
+    private final AuthService authService;
 
     @Operation(summary = "로그인", description = "JWT 적용한 로그인")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid LoginRequestDto request, HttpServletResponse response) {
         try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getEmail(),
-                            request.getPassword()
-                    )
-            );
+            String accessToken = authService.authenticateAndGenerateToken(request);
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            TokenDto token = jwtTokenProvider.createToken(authentication);
-
-            ResponseCookie cookie = ResponseCookie.from("accessToken", token.getAccessToken())
+            ResponseCookie cookie = ResponseCookie.from("accessToken", accessToken)
                     .path("/")
                     .httpOnly(true)
                     .maxAge(3600)
                     .sameSite("Lax")
-                    //.secure(true)
+                    .secure(true)
+                    //.secure(false)
                     .build();
 
             response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
-            return ResponseEntity.ok(token);
+            return ResponseEntity.ok().body(Map.of("message", "로그인이 완료되었습니다."));
 
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("이메일 또는 비밀번호가 틀렸습니다.");

@@ -53,12 +53,12 @@
       const loginBtn = document.getElementById("loginBtn");
 
       loginBtn.addEventListener("click", async () => {
-          console.log("버튼 클릭됨!"); // 1. 이게 찍히는지 확인
+          console.log("버튼 클릭됨!");
 
           const email = document.getElementById("email").value;
           const password = document.getElementById("password").value;
 
-          console.log("보낼 데이터:", { email, password }); // 2. 데이터 확인
+          console.log("보낼 데이터:", { email, password });
 
           try {
               const res = await fetch("/api/auth/login", {
@@ -69,7 +69,7 @@
                   body: JSON.stringify({ email, password })
               });
 
-              console.log("응답 상태 코드:", res.status); // 3. 상태 코드 확인
+              console.log("응답 상태 코드:", res.status);
 
               if (!res.ok) {
                   const errorText = await res.text();
@@ -78,12 +78,12 @@
               }
 
               const data = await res.json();
-              localStorage.setItem("accessToken", data.accessToken);
+              console.log("서버 응답 메시지:", data.message);
               alert("로그인 성공!");
               location.href = "/";
 
           } catch (e) {
-              console.error("최종 catch 에러:", e); // 4. 실제 에러 확인
+              console.error("최종 catch 에러:", e);
               alert("아이디 또는 비밀번호를 확인하세요");
           }
       });
