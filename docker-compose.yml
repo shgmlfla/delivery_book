@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:16.9
+    image: postgres:16.2
     container_name: dbook-db
     restart: unless-stopped
     environment:
@@ -20,17 +20,22 @@ services:
       retries: 5
 
   app:
-    build: .
+    image: ${DOCKER_USERNAME}/dbook:latest
     container_name: dbook-app
     restart: unless-stopped
     depends_on:
       - db:
           condition : service_healthy
     environment:
+      - SPRING_PROFILES_ACTIVE=prod
       - SPRING_DATASOURCE_URL=jdbc:postgresql://dbook-db:5432/dbook
       - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}    
+      - BOOK_API_KEY=${BOOK_API_KEY}
+      - TOSS_PAYMENT_CLIENT_KEY=${TOSS_PAYMENT_CLIENT_KEY}
+      - TOSS_PAYMENT_SECRET_KEY=${TOSS_PAYMENT_SECRET_KEY}
     ports:
       - "8080:8080"
     networks:

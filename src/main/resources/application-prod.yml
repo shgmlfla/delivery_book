@@ -1,0 +1,53 @@
+spring:
+  thymeleaf:
+    cache: true
+  freemarker:
+    cache: true
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        use_sql_comments: false
+
+jwt:
+  secret: ${JWT_SECRET_KEY}
+  access-token-expiration: 1800000
+
+book:
+  api:
+    key: ${BOOK_API_KEY}
+
+payment:
+  toss:
+    client-key: ${TOSS_PAYMENT_CLIENT_KEY}
+    secret-key: ${TOSS_PAYMENT_SECRET_KEY}
+
+library:
+  default-code: "141553"
+  base-url: "http://data4library.kr/api/"
+
+logging:
+  level:
+    org:
+      springframework:
+        security: INFO
+
+server:
+  error:
+    include-message: always
+    include-stacktrace: never
+
+  servlet:
+    session:
+      cookie:
+        http-only: true
+        secure: true

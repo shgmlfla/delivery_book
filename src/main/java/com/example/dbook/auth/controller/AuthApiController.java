@@ -38,19 +38,23 @@ public class AuthApiController {
     private final MemberService memberService;
     private final AuthService authService;
 
+    @Value("${spring.profiles.active:dev}")
+    private String activeProfile;
+
     @Operation(summary = "로그인", description = "JWT 적용한 로그인")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid LoginRequestDto request, HttpServletResponse response) {
         try {
             String accessToken = authService.authenticateAndGenerateToken(request);
 
+            boolean isSecure = "prod".equals(activeProfile);
+
             ResponseCookie cookie = ResponseCookie.from("accessToken", accessToken)
                     .path("/")
                     .httpOnly(true)
                     .maxAge(3600)
                     .sameSite("Lax")
-                    .secure(true)
-                    //.secure(false)
+                    .secure(isSecure)
                     .build();
 
             response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
