@@ -25,72 +25,35 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly=true)
 @Slf4j
 public class PaymentService {
 
     private final PaymentProcessManager paymentProcessManager;
-    private final MemberRepository memberRepository;
-    private final OrderRepository orderRepository;
-    private final PaymentRepository paymentRepository;
-    private final SubscriptionService subscriptionService;
-    private final SubscriptionBookService subscriptionBookService;
     private final BillingKeyRepository billingKeyRepository;
+    private final PaymentTransactionManager paymentTransactionManager;
 
-    @Transactional
     public void completeSubscriptionProcess(String authKey, String customerKey, String email, PlanType planType){
 
-        // 회원 조회
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        Orders orders = paymentTransactionManager.prepareOrder(email, planType);
+        Member member = orders.getMember();
 
-        //ORDERS 테이블 READY 상태
-        String uniqueSuffix = java.util.UUID.randomUUID().toString().substring(0, 8);
-        String tossOrderId = "SUB_" + member.getId() + "_" + System.currentTimeMillis() + "_" + uniqueSuffix;
+        String billingKey = billingKeyRepository.findByMemberId(member.getId())
+                .map(BillingKey::getBillingKey)
+                .orElseGet(() -> {
+                    log.info("새로운 빌링키 발급 - 회원 ID: {}", member.getId());
+                    return paymentProcessManager.requestAndSaveBillingKey(authKey, customerKey, email).getBillingKey();
+                });
 
-        Orders orders = Orders.builder()
-                .member(member)
-                .tossOrderId(tossOrderId)
-                .orderDate(LocalDateTime.now())
-                .total_price(planType.getPrice())
-                .orderStatus(Orders.OrderStatus.READY)
-                .orderType(Orders.OrderType.SUBSCRIPTION)
-                .build();
-        orderRepository.save(orders);
+        TossInitialPaymentResponse approvalResponse = paymentProcessManager.executeInitialSubscriptionPayment(
+                billingKey, orders.getTossOrderId(), planType, member
+        );
 
-        //빌링키 조회
-        Optional<BillingKey> existingKey = billingKeyRepository.findByMemberId(member.getId());
-        String billingKey;
-
-        if (existingKey.isPresent()) {
-            log.info("기존 빌링키 회원 ID: {}", member.getId());
-            billingKey = existingKey.get().getBillingKey();
-        } else {
-            log.info("새로운 빌링키 발급 - 회원 ID: {}", member.getId());
-            BillingKeyResponse billingKeyResponse = paymentProcessManager.requestAndSaveBillingKey(authKey, customerKey, email);
-            billingKey = billingKeyResponse.getBillingKey();
+        try {
+            paymentTransactionManager.processPaymentSuccess(orders.getId(), member, approvalResponse, planType);
+        } catch (Exception e) {
+            log.error("결제는 성공했으나 DB처리 중 오류 발생", e);
+            throw new RuntimeException("결제 완료 후 시스템 처리 중 에러 발생", e);
         }
-
-        //첫 결제
-        TossInitialPaymentResponse approvalResponse = paymentProcessManager.executeInitialSubscriptionPayment(billingKey, tossOrderId, planType, member);
-        
-        //결제 내역(payment) 저장
-        Payment payment = Payment.builder()
-                .tossPaymentKey(null)
-                .tossOrderId(tossOrderId)
-                .amount(Long.valueOf(planType.getPrice()))
-                .paymentMethod("CARD")
-                .approvedAt(LocalDateTime.now())
-                .order(orders)
-                .member(member)
-                .build();
-        paymentRepository.save(payment);
-
-        // 주문상태 READY -> 완료
-        orders.setOrderStatus(Orders.OrderStatus.PAYMENT_COMPLETED);
-
-        subscriptionBookService.selectedSubsriptionBooks(orders, member.getId());
-        subscriptionService.createOrUpadateSubscription(member.getId(), planType);
 
         log.info("구독 결제 시스템 완료 회원 ID: {}, 가입 플랜: {}", member.getId(), planType);
     }
