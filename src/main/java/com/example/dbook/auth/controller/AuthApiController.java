@@ -55,7 +55,7 @@ public class AuthApiController {
                     .httpOnly(true)
                     .maxAge(3600)
                     .sameSite("Lax")
-                    .secure(isSecure)
+                    .secure(false)
                     .build();
 
             response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
