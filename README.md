@@ -15,18 +15,6 @@
 
 <img width="992" height="736" alt="image" src="https://github.com/user-attachments/assets/c4439e71-a455-4e5f-8365-95d26cbf6bb4" />
 
-[소개]
-
-구독권을 통해 월마다 도서를 정기적으로 배송해주는 웹사이트
-
-[기간]
-
-2026.01.13~2026.04.16 (3개월)
-
-[인원]
-
-1명 (백엔드 1명)
-
 [주요 개발 기능]
 
 - Spring Security 및 jWT를 활용한 인증•인가 기능 구현
