@@ -1,12 +1,15 @@
-### 기술 스택
+### 개인별 도서 정기 배송 서비스
+> 프로젝트 기간 : 026.01.13 ~ 2026.04  
+> 프로젝트 개요 : 월/년 단위 구독권을 활용한 구독 사용자 개인별 도서 정기 배송 시스템 개발
 
-프론트
+## 사용 기술 (Tech Stack)
 
-BootStrap5 / JavaScript / CSS
-
-백엔드
-
-JAVA / SpringBoot / PostgreSQL
+| 분야 | 스택 |
+| :---: | :--- |
+| **Backend** | ![Java](https://img.shields.io/badge/Java_17-007396?style=flat-square&logo=OpenID_Connect&logoColor=white) ![SpringBoot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=flat-square&logo=Spring_Boot&logoColor=white) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=PostgreSQL&logoColor=white) ![SpringDataJPA](https://img.shields.io/badge/Spring_Data_JPA-59666C?style=flat-square) ![SpringSecurity](https://img.shields.io/badge/Spring_Security-6DB33F?style=flat-square&logo=Spring_Security&logoColor=white) ![QueryDSL                 ](https://img.shields.io/badge/QueryDSL-0778B9?style=flat-square) |
+| **Database** | ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=PostgreSQL&logoColor=white) |
+| **CI/CD** | ![AWS](https://img.shields.io/badge/AWS_EC2-FF9900?style=flat-square&logo=Amazon_EC2&logoColor=white) ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=Docker&logoColor=white) ![GitHubActions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=flat-square&logo=GitHub_Actions&logoColor=white) |
+| **Etc** | ![Flyway](https://img.shields.io/badge/Flyway-D65A31?style=flat-square&logo=Flyway&logoColor=white) ![Mockito](https://img.shields.io/badge/Mockito-52616B?style=flat-square) ![JMeter](https://img.shields.io/badge/JMeter-A32B2B?style=flat-square&logo=Apache_JMeter&logoColor=white) |
 
 ## ⌨️ ERD
 
